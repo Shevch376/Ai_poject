@@ -1,0 +1,803 @@
+<ChatBubble>:
+    size_hint_x: 1
+    size_hint_y: None
+    height: row.height + dp(8)
+    padding: [0, dp(4)]
+    AnchorLayout:
+        id: row
+        opacity: root.row_opacity
+        y: root.y + root.row_y_offset
+        anchor_x: "right" if root.sender == "user" else "left"
+        anchor_y: "top"
+        size_hint_x: 1
+        size_hint_y: None
+        height: message_column.height
+        MDBoxLayout:
+            id: message_column
+            orientation: "vertical"
+            size_hint: None, None
+            width: root.bubble_width
+            height: bubble_box.height + meta_row.height + (dp(8) if root.sender == "ai" else 0)
+            MDBoxLayout:
+                id: bubble_box
+                size_hint: None, None
+                width: message_column.width
+                height: content_box.height + dp(14)
+                padding: [dp(15), dp(8)]
+                radius: [dp(20), dp(20), dp(4), dp(20)] if root.sender == "user" else [dp(20), dp(20), dp(20), dp(4)]
+                md_bg_color: app.user_bubble_color if root.sender == "user" else app.ai_bubble_color
+                MDBoxLayout:
+                    id: content_box
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(5)
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: label.height
+                        Label:
+                            id: label
+                            text: root.display_text
+                            markup: root.sender == "ai"
+                            on_ref_press: root.open_link(args[1])
+                            color: app.bubble_text_color
+                            font_size: sp(16)
+                            line_height: 1.08
+                            size_hint_x: 1
+                            size_hint_y: None
+                            text_size: message_column.width - dp(30), None
+                            halign: "left"
+                            valign: "middle"
+                            opacity: 1 if root.bubble_type in ("text", "pending") else 0
+                            height: self.texture_size[1] if root.bubble_type in ("text", "pending") else 0
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: root.cards_area_height + dp(4) if root.cards else 0
+                        spacing: dp(10)
+                        opacity: 1 if root.cards else 0
+                        padding: [0, dp(4), 0, 0]
+                        ChatCardsCanvas:
+                            id: cards_box
+                            size_hint_x: None
+                            width: label.width
+                            size_hint_y: None
+                            height: root.cards_area_height
+                            cards: root.cards
+                    MDBoxLayout:
+                        orientation: "horizontal"
+                        size_hint_y: None
+                        height: dp(30) if root.bubble_type == "audio" else 0
+                        opacity: 1 if root.bubble_type == "audio" else 0
+                        spacing: dp(12)
+                        MDIcon:
+                            icon: "play-circle"
+                            theme_text_color: "Custom"
+                            text_color: app.bubble_text_color
+                            font_size: dp(20)
+                            size_hint: None, None
+                            size: dp(22), dp(22)
+                            pos_hint: {"center_y": 0.5}
+                        MDBoxLayout:
+                            orientation: "horizontal"
+                            size_hint_x: 1
+                            spacing: dp(4)
+                            pos_hint: {"center_y": 0.5}
+                            canvas.before:
+                                Color:
+                                    rgba: 1, 1, 1, 0.08
+                                RoundedRectangle:
+                                    pos: self.x, self.center_y - dp(6)
+                                    size: self.width, dp(12)
+                                    radius: [dp(6)]
+                            Widget:
+                            Widget:
+                            Widget:
+                            Widget:
+                        Label:
+                            text: root.meta_text
+                            color: app.muted_text_color
+                            font_size: sp(13)
+                            bold: True
+                            size_hint_x: None
+                            width: dp(38)
+                            halign: "right"
+                            valign: "middle"
+                            text_size: self.size
+            MDBoxLayout:
+                id: meta_row
+                orientation: "horizontal"
+                size_hint: None, None
+                width: message_column.width
+                height: dp(28) if root.bubble_type == "text" else 0
+                spacing: dp(8)
+                padding: [dp(4), dp(6), 0, 0]
+                opacity: 1 if root.bubble_type == "text" else 0
+                ChatActionButton:
+                    icon: "content-copy"
+                    opacity: 1 if root.sender == "ai" and not root.is_pending else 0
+                    disabled: root.sender != "ai" or root.is_pending
+                    on_release: root.copy_text()
+                ChatActionButton:
+                    icon: "refresh"
+                    opacity: 1 if root.sender == "ai" and not root.is_pending else 0
+                    disabled: root.sender != "ai" or root.is_pending
+                    on_release: root.refresh_chat()
+                ChatActionButton:
+                    icon: "thumb-up" if root.reaction_type == "like" else "thumb-up-outline"
+                    selected: root.reaction_type == "like"
+                    opacity: 1 if root.sender == "ai" and not root.is_pending else 0
+                    disabled: root.sender != "ai" or root.is_pending
+                    on_release: root.set_reaction("like")
+                ChatActionButton:
+                    icon: "thumb-down" if root.reaction_type == "dislike" else "thumb-down-outline"
+                    selected: root.reaction_type == "dislike"
+                    opacity: 1 if root.sender == "ai" and not root.is_pending else 0
+                    disabled: root.sender != "ai" or root.is_pending
+                    on_release: root.set_reaction("dislike")
+                Widget:
+                    size_hint_x: 1
+                Label:
+                    text: root.meta_text
+                    color: app.muted_text_color
+                    font_size: sp(11)
+                    size_hint: None, None
+                    width: dp(44)
+                    height: dp(18)
+                    opacity: 1 if root.meta_text and root.bubble_type == "text" else 0
+                    halign: "right"
+                    valign: "middle"
+                    text_size: self.size
+
+<ChatActionButton>:
+    size_hint: None, None
+    size: dp(20), dp(20)
+    MDIcon:
+        icon: root.icon
+        theme_text_color: "Custom"
+        text_color: (0.45, 0.72, 1, 1) if root.selected else app.muted_text_color
+        font_size: dp(18)
+        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+<ChatMiniCard>:
+    orientation: "horizontal"
+    size_hint_x: None
+    size_hint_y: None
+    width: self.parent.width if self.parent else dp(0)
+    height: dp(94)
+    spacing: dp(8)
+    padding: [dp(10), dp(8)]
+    canvas.before:
+        Color:
+            rgba: app.card_bg_color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(16)]
+        Color:
+            rgba: app.card_border_color
+        Line:
+            rounded_rectangle: [self.x, self.y, self.width, self.height, dp(16)]
+            width: 1
+    Widget:
+        size_hint: None, None
+        size: (dp(62), dp(88)) if root.has_image else (0, 0)
+        opacity: 1 if root.has_image else 0
+        canvas.before:
+            Color:
+                rgba: (0.14, 0.15, 0.18, 1)
+            RoundedRectangle:
+                pos: self.pos
+                size: self.size
+                radius: [dp(14)]
+    BoxLayout:
+        orientation: "vertical"
+        size_hint_x: 1
+        spacing: dp(3)
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(22)
+            spacing: dp(8)
+            Label:
+                text: root.title
+                color: app.primary_text_color
+                font_size: sp(15)
+                bold: True
+                size_hint_y: None
+                height: dp(22)
+                text_size: self.width, None
+                shorten: True
+                shorten_from: "right"
+                halign: "left"
+                valign: "middle"
+            AnchorLayout:
+                size_hint: None, None
+                size: dp(22), dp(22)
+                anchor_x: "center"
+                anchor_y: "center"
+                Button:
+                    text: "*" if root.is_favorite else "+"
+                    color: app.card_accent_text_color if root.is_favorite else app.muted_text_color
+                    font_size: sp(18)
+                    bold: True
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    size_hint: None, None
+                    size: dp(22), dp(22)
+                    on_release: root.toggle_favorite()
+        Label:
+            text: root.subtitle
+            color: app.card_subtitle_color
+            font_size: sp(11.5)
+            size_hint_y: None
+            height: dp(16) if self.text else 0
+            text_size: self.width, None
+            shorten: True
+            shorten_from: "right"
+            halign: "left"
+            valign: "middle"
+        Label:
+            text: root.description
+            color: app.card_subtitle_color
+            font_size: sp(11)
+            size_hint_y: None
+            height: dp(16) if self.text else 0
+            text_size: self.width, None
+            max_lines: 1
+            shorten: True
+            shorten_from: "right"
+            halign: "left"
+            valign: "middle"
+        Widget:
+        BoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(15)
+            spacing: dp(8)
+            Label:
+                text: root.meta_left
+                color: app.card_meta_text_color
+                font_size: sp(11)
+                size_hint_y: None
+                height: dp(15)
+                text_size: self.width, None
+                halign: "left"
+                valign: "middle"
+            Label:
+                text: root.meta_right
+                color: app.card_meta_text_color
+                font_size: sp(11)
+                halign: "right"
+                valign: "middle"
+                size_hint_y: None
+                height: dp(15)
+                text_size: self.width, None
+        Label:
+            text: root.accent_text
+            color: app.card_accent_text_color if root.accent_text else (0, 0, 0, 0)
+            font_size: sp(10.5)
+            size_hint_y: None
+            height: dp(14) if self.text else 0
+            text_size: self.width, None
+            halign: "left"
+            valign: "middle"
+
+<ChatInterface>:
+    MDNavigationLayout:
+        ScreenManager:
+            Screen:
+                name: "chat_main"
+                MDFloatLayout:
+                    md_bg_color: app.app_bg_color
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        MDTopAppBar:
+                            title: ""
+                            elevation: 0
+                            md_bg_color: app.app_bar_bg_color
+                            specific_text_color: app.primary_text_color
+                            left_action_items: [["menu", lambda x: root.open_nav()]]
+                            right_action_items: [[app.theme_toggle_icon, lambda x: app.toggle_color_mode()], ["plus", lambda x: root.open_options()], ["star-outline", lambda x: root.go_to_saved()], ["calendar-blank", lambda x: app.switch_screen("calendar_screen", "left")]]
+
+                        Widget:
+                            size_hint_y: None
+                            height: dp(1)
+                            canvas:
+                                Color:
+                                    rgba: app.divider_color
+                                Rectangle:
+                                    pos: self.pos
+                                    size: self.size
+
+                        ScrollView:
+                            id: chat_scroll
+                            always_overscroll: False
+                            opacity: root.chat_content_opacity
+                            on_scroll_y: root.on_chat_scroll_y(self.scroll_y)
+                            MDBoxLayout:
+                                id: chat_list
+                                orientation: "vertical"
+                                size_hint_y: None
+                                height: self.minimum_height
+                                padding: [dp(20), dp(10)]
+                                spacing: dp(15)
+                                MDBoxLayout:
+                                    id: empty_chat_view
+                                    orientation: "vertical"
+                                    size_hint_y: None
+                                    height: 0
+                                    opacity: 0
+                                    disabled: True
+                                    Widget:
+                                        size_hint_y: 0.3
+                                    RelativeLayout:
+                                        size_hint: None, None
+                                        size: dp(260), dp(340)
+                                        pos_hint: {"center_x": .5}
+                                        canvas.before:
+                                            Color:
+                                                rgba: app.surface_color
+                                            RoundedRectangle:
+                                                pos: 0, 0
+                                                size: self.size
+                                                radius: [dp(30)]
+                                        MDIcon:
+                                            icon: "lightbulb-outline"
+                                            font_size: dp(80)
+                                            theme_text_color: "Custom"
+                                            text_color: 0.15, 0.15, 0.15, 1
+                                            pos_hint: {"center_x": 0.5, "center_y": 0.55}
+                                    MDBoxLayout:
+                                        orientation: "vertical"
+                                        size_hint_y: None
+                                        height: dp(120)
+                                        padding: [dp(20), dp(20)]
+                                        spacing: dp(8)
+                                        MDLabel:
+                                            text: "Your leisure assistant."
+                                            halign: "center"
+                                            font_style: "H5"
+                                            bold: True
+                                            theme_text_color: "Custom"
+                                            text_color: app.primary_text_color
+                                        MDLabel:
+                                            text: "I will help you find ideas for activities, events, and places near you."
+                                            halign: "center"
+                                            theme_text_color: "Custom"
+                                            text_color: app.secondary_text_color
+                                            font_style: "Body1"
+                                    Widget:
+                                        size_hint_y: 0.7
+
+                        MDLabel:
+                            text: root.chat_error
+                            theme_text_color: "Custom"
+                            text_color: 0.91, 0.45, 0.45, 1
+                            font_size: sp(11.5)
+                            size_hint_y: None
+                            height: self.texture_size[1] if self.text else 0
+                            padding: [dp(20), 0, dp(20), 0]
+                            text_size: self.width - dp(40), None
+                            halign: "left"
+
+                        MDBoxLayout:
+                            orientation: "horizontal"
+                            size_hint_y: None
+                            height: dp(62) if root.subscription_block_text else 0
+                            opacity: 1 if root.subscription_block_text else 0
+                            disabled: not root.subscription_block_text
+                            padding: [dp(18), dp(8), dp(18), dp(8)]
+                            spacing: dp(10)
+                            canvas.before:
+                                Color:
+                                    rgba: app.surface_strong_color
+                                RoundedRectangle:
+                                    pos: self.x + dp(14), self.y + dp(4)
+                                    size: self.width - dp(28), self.height - dp(8)
+                                    radius: [dp(18)]
+                            MDIcon:
+                                icon: "lock-outline"
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                font_size: dp(18)
+                                size_hint: None, None
+                                size: dp(22), dp(22)
+                                pos_hint: {"center_y": 0.5}
+                            MDLabel:
+                                text: root.subscription_block_text
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                font_size: sp(12)
+                                size_hint_x: 1
+                                halign: "left"
+                                valign: "middle"
+                                text_size: self.width, None
+                            Button:
+                                text: "Plans"
+                                size_hint: None, None
+                                size: dp(64), dp(34)
+                                pos_hint: {"center_y": 0.5}
+                                disabled: not root.subscription_block_text
+                                background_color: 0, 0, 0, 0
+                                background_normal: ""
+                                background_down: ""
+                                color: app.primary_text_color
+                                bold: True
+                                on_release: app.switch_screen("subscription_screen", "left")
+                                canvas.before:
+                                    Color:
+                                        rgba: app.surface_color
+                                    RoundedRectangle:
+                                        pos: self.pos
+                                        size: self.size
+                                        radius: [dp(14)]
+
+                        MDLabel:
+                            text: root.generation_status_text
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            font_size: sp(12)
+                            size_hint_y: None
+                            height: dp(18)
+                            padding: [dp(24), 0, dp(24), 0]
+                            text_size: self.width - dp(48), None
+                            halign: "left"
+                            opacity: 1 if root.generation_status_text else 0
+
+                        MDBoxLayout:
+                            orientation: "horizontal"
+                            size_hint_y: None
+                            height: dp(90) + root.keyboard_offset
+                            padding: [dp(15), dp(10), dp(15), dp(25) + root.keyboard_offset]
+                            spacing: dp(10)
+
+                            RelativeLayout:
+                                size_hint_x: 1
+                                canvas.before:
+                                    Color:
+                                        rgba: app.disabled_surface_color if not root.can_use_chat else app.chat_input_bg_color
+                                    RoundedRectangle:
+                                        pos: 0, 0
+                                        size: self.size
+                                        radius: [dp(25)]
+
+                                TextInput:
+                                    id: user_input
+                                    hint_text: "Subscription required..." if not root.can_use_chat else "Message..."
+                                    hint_text_color: app.muted_text_color
+                                    foreground_color: app.primary_text_color
+                                    background_color: 0, 0, 0, 0
+                                    cursor_color: app.primary_text_color
+                                    disabled_foreground_color: app.muted_text_color
+                                    selection_color: 0, 0, 0, 0
+                                    multiline: False
+                                    size_hint: 1, None
+                                    height: dp(40)
+                                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                    padding: [dp(20), dp(10), dp(50), dp(10)]
+                                    opacity: 1 if root.voice_mode == "idle" else 0
+                                    disabled: root.voice_mode != "idle"
+                                    readonly: not root.can_use_chat
+                                    on_text_validate: root.send_message()
+
+                                MDIconButton:
+                                    icon: "send"
+                                    theme_icon_color: "Custom"
+                                    icon_color: app.muted_text_color if not root.can_use_chat else app.chat_send_icon_color
+                                    md_bg_color: 0, 0, 0, 0
+                                    pos_hint: {"right": 1, "center_y": 0.5}
+                                    opacity: 1 if root.voice_mode == "idle" and not root.generation_pending else 0
+                                    disabled: root.voice_mode != "idle" or root.generation_pending or not root.can_use_chat
+                                    on_release: root.send_message()
+
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    size_hint: 1, None
+                                    height: dp(40)
+                                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                                    opacity: 1 if root.voice_mode == "recording" else 0
+                                    spacing: dp(8)
+                                    padding: [dp(16), 0, dp(12), 0]
+                                    MDIcon:
+                                        icon: "delete"
+                                        theme_text_color: "Custom"
+                                        text_color: (1, 1, 1, 1) if root.voice_cancel_ready else (0.75 + 0.2 * root.voice_cancel_progress, 0.28, 0.33, 0.25 + 0.75 * root.voice_cancel_progress)
+                                        font_size: dp(22) if root.voice_cancel_ready else dp(18)
+                                        size_hint: None, None
+                                        size: dp(28), dp(28)
+                                        pos_hint: {"center_y": 0.5}
+                                        canvas.before:
+                                            Color:
+                                                rgba: (0.92, 0.24, 0.30, 1) if root.voice_cancel_ready else (0.92, 0.24, 0.30, 0)
+                                            Ellipse:
+                                                pos: self.center_x - dp(17), self.center_y - dp(17)
+                                                size: dp(34), dp(34)
+                                    MDLabel:
+                                        text: root.format_voice_duration(root.voice_elapsed)
+                                        theme_text_color: "Custom"
+                                        text_color: app.primary_text_color
+                                        font_size: sp(15)
+                                        bold: True
+                                        size_hint_x: None
+                                        width: dp(52)
+                                        halign: "left"
+                                        valign: "middle"
+                                        text_size: self.size
+                                    MDIcon:
+                                        icon: "arrow-left"
+                                        theme_text_color: "Custom"
+                                        text_color: 0.70 + 0.25 * root.voice_cancel_progress, 0.70, 0.72, 1
+                                        font_size: dp(17)
+                                        size_hint: None, None
+                                        size: dp(16), dp(16)
+                                        pos_hint: {"center_y": 0.5}
+                                    MDLabel:
+                                        text: "Swipe left to cancel"
+                                        theme_text_color: "Custom"
+                                        text_color: 0.78 + 0.18 * root.voice_cancel_progress, 0.80, 0.84, 1
+                                        font_size: sp(13)
+                                        size_hint_x: 1
+                                        halign: "left"
+                                        valign: "middle"
+                                        text_size: self.size
+
+                            MDFloatLayout:
+                                id: record_btn_wrap
+                                size_hint: None, None
+                                size: dp(50), dp(50)
+                                pos_hint: {"center_y": .5}
+                                opacity: 0 if root.voice_cancel_ready else 1
+                                canvas.before:
+                                    Color:
+                                        rgba: app.disabled_surface_color if not root.can_use_chat and not root.generation_pending else (app.voice_button_color if root.generation_pending or root.voice_mode == "idle" else [0.871, 0.204, 0.267, 1])
+                                    Ellipse:
+                                        pos: self.pos
+                                        size: self.size
+                                Button:
+                                    id: record_btn
+                                    background_color: 0, 0, 0, 0
+                                    background_normal: ""
+                                    background_down: ""
+                                    size_hint: 1, 1
+                                    pos: self.parent.pos
+                                    size: self.parent.size
+                                    disabled: not root.can_use_chat and not root.generation_pending
+                                    on_release: root.cancel_generation() if root.generation_pending else root.send_voice_message()
+                                MDIcon:
+                                    icon: "stop" if root.generation_pending else ("microphone" if root.voice_mode == "idle" else "send")
+                                    theme_text_color: "Custom"
+                                    text_color: app.muted_text_color if not root.can_use_chat and not root.generation_pending else app.chat_send_icon_color
+                                    font_size: dp(23)
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                    MDBoxLayout:
+                        size_hint: None, None
+                        width: dp(124)
+                        height: dp(40)
+                        pos_hint: {"center_x": 0.5}
+                        y: dp(102) + root.keyboard_offset
+                        opacity: root.toast_opacity
+                        padding: [dp(14), 0, dp(14), 0]
+                        spacing: dp(8)
+                        canvas.before:
+                            Color:
+                                rgba: app.sheet_bg_color
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(20)]
+                            Color:
+                                rgba: app.card_border_color
+                            Line:
+                                rounded_rectangle: [self.x, self.y, self.width, self.height, dp(20)]
+                                width: 1
+                        MDIcon:
+                            icon: "check"
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            font_size: dp(17)
+                            size_hint: None, None
+                            size: dp(18), dp(18)
+                            pos_hint: {"center_y": 0.5}
+                        MDLabel:
+                            text: root.toast_text
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            font_size: sp(13)
+                            bold: True
+                            size_hint: 1, None
+                            height: dp(20)
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.width, None
+                            shorten: True
+                            pos_hint: {"center_y": 0.5}
+
+                    MDFloatLayout:
+                        id: shade
+                        opacity: root.opacity_bg
+                        md_bg_color: 0, 0, 0, 0.6 if root.opacity_bg > 0 else 0
+                        on_touch_down: if self.opacity > 0: root.close_options()
+
+                    MDCard:
+                        id: options_card
+                        size_hint: None, None
+                        width: dp(320)
+                        height: dp(220)
+                        pos_hint: {"center_x": 0.5}
+                        y: root.options_card_pos
+                        radius: [dp(32)]
+                        md_bg_color: app.sheet_bg_color
+                        elevation: 0
+                        padding: [dp(20), dp(18), dp(20), dp(18)]
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            spacing: dp(14)
+                            MDLabel:
+                                text: "Chat actions"
+                                theme_text_color: "Custom"
+                                text_color: app.primary_text_color
+                                font_size: sp(20)
+                                bold: True
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                            MDLabel:
+                                text: "Delete the current chat and start a new empty one."
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                font_size: sp(13)
+                                size_hint_y: None
+                                height: self.texture_size[1]
+                                text_size: self.width, None
+                            Widget:
+                            Button:
+                                size_hint_y: None
+                                height: dp(52)
+                                background_color: 0, 0, 0, 0
+                                background_normal: ""
+                                background_down: ""
+                                on_release: root.delete_current_chat()
+                                canvas.before:
+                                    Color:
+                                        rgba: 0.72, 0.16, 0.20, 1
+                                    RoundedRectangle:
+                                        pos: self.pos
+                                        size: self.size
+                                        radius: [dp(18)]
+                                MDBoxLayout:
+                                    orientation: "horizontal"
+                                    pos: self.parent.pos
+                                    size: self.parent.size
+                                    padding: [dp(16), 0, dp(16), 0]
+                                    spacing: dp(10)
+                                    MDIcon:
+                                        icon: "trash-can-outline"
+                                        theme_text_color: "Custom"
+                                        text_color: app.primary_text_color
+                                        font_size: dp(20)
+                                        size_hint: None, None
+                                        size: dp(22), dp(22)
+                                        pos_hint: {"center_y": 0.5}
+                                    MDLabel:
+                                        text: "Delete chat"
+                                        theme_text_color: "Custom"
+                                        text_color: app.primary_text_color
+                                        font_size: sp(15)
+                                        bold: True
+                                        halign: "left"
+                                        valign: "middle"
+                                        text_size: self.size
+
+        MDNavigationDrawer:
+            id: nav_drawer
+            radius: (0, dp(28), dp(28), 0)
+            md_bg_color: app.sheet_bg_color
+            width: dp(240)
+            MDBoxLayout:
+                orientation: "vertical"
+                padding: [dp(18), dp(22), dp(18), dp(18)]
+                spacing: dp(8)
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    spacing: dp(16)
+
+                    MDLabel:
+                        text: "History"
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        font_size: sp(24)
+                        bold: True
+                        size_hint_y: None
+                        height: self.texture_size[1]
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(14)
+
+                        MDBoxLayout:
+                            size_hint_y: None
+                            height: dp(28)
+                            MDLabel:
+                                text: "2026"
+                                theme_text_color: "Custom"
+                                text_color: app.primary_text_color
+                                font_size: sp(17)
+                                bold: True
+                                halign: "left"
+                            MDIcon:
+                                icon: "chevron-up"
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                font_size: dp(18)
+                                pos_hint: {"center_y": 0.5}
+
+                ScrollView:
+                    bar_width: 0
+                    MDBoxLayout:
+                        id: history_list
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_height
+                        padding: [0, dp(12), 0, 0]
+                        spacing: dp(12)
+
+                Widget:
+                    size_hint_y: 1
+
+                MDBoxLayout:
+                    size_hint: None, None
+                    size: dp(188), dp(56)
+                    pos_hint: {"center_x": .5, "y": 0.01}
+                    padding: [0, 0, 0, 0]
+                    Button:
+                        background_color: 0, 0, 0, 0
+                        size_hint: 1, 1
+                        on_release: root.go_to_profile()
+                        canvas.before:
+                            Color:
+                                rgba: app.surface_color
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(22)]
+                        MDBoxLayout:
+                            orientation: "horizontal"
+                            pos: self.parent.pos
+                            size: self.parent.size
+                            padding: [dp(14), 0, dp(12), 0]
+                            spacing: dp(12)
+                            MDBoxLayout:
+                                size_hint: None, None
+                                size: dp(28), dp(28)
+                                pos_hint: {"center_y": .5}
+                                radius: [dp(14)]
+                                md_bg_color: app.surface_strong_color
+                                RelativeLayout:
+                                    MDIcon:
+                                        icon: "account"
+                                        theme_text_color: "Custom"
+                                        text_color: app.muted_text_color
+                                        font_size: dp(17)
+                                        pos_hint: {"center_x": .5, "center_y": .5}
+                            MDLabel:
+                                text: "Profile"
+                                theme_text_color: "Custom"
+                                text_color: app.primary_text_color
+                                font_size: sp(15)
+                                bold: True
+                                halign: "left"
+                                pos_hint: {"center_y": .5}
+                            MDIcon:
+                                icon: "dots-horizontal"
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                font_size: dp(16)
+                                pos_hint: {"center_y": .5}

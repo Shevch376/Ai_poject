@@ -1,0 +1,252 @@
+<SavedScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.app_bar_bg_color
+        padding: [dp(16), dp(18), dp(16), dp(18)]
+        spacing: dp(14)
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(42)
+
+            MDFloatLayout:
+                size_hint_x: 1
+
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    pos_hint: {"x": 0, "center_y": 0.5}
+                    canvas.before:
+                        Color:
+                            rgba: app.surface_color
+                        Ellipse:
+                            pos: self.pos
+                            size: self.size
+                    Button:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        size_hint: None, None
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        on_release: root.go_back()
+                    MDIcon:
+                        icon: "chevron-left"
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        font_size: dp(20)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    pos_hint: {"right": 1, "center_y": 0.5}
+                    canvas.before:
+                        Color:
+                            rgba: app.surface_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(14)]
+                    Button:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        size_hint: None, None
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        on_release: app.switch_screen("calendar_screen", "left")
+                    MDIcon:
+                        icon: "calendar-blank-outline"
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        font_size: dp(19)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(40)
+            spacing: dp(8)
+            padding: [0, 0, 0, 0]
+            canvas.before:
+                Color:
+                    rgba: app.surface_color
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(16)]
+                Color:
+                    rgba: 0.102, 0.451, 0.914, 1
+                RoundedRectangle:
+                    pos: root.tab_indicator_x, self.y
+                    size: root.tab_indicator_w, self.height
+                    radius: [dp(16)]
+
+            MDFloatLayout:
+                id: tab_all
+                Button:
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    size_hint: 1, 1
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    on_release: root.select_tab("all")
+                MDLabel:
+                    text: "All"
+                    theme_text_color: "Custom"
+                    text_color: app.selected_chip_text_color if root.selected_tab == "all" else app.muted_text_color
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+                    bold: True
+                    font_size: sp(14)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            MDFloatLayout:
+                id: tab_places
+                Button:
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    size_hint: 1, 1
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    on_release: root.select_tab("places")
+                MDLabel:
+                    text: "Places"
+                    theme_text_color: "Custom"
+                    text_color: app.selected_chip_text_color if root.selected_tab == "places" else app.muted_text_color
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+                    bold: True
+                    font_size: sp(14)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            MDFloatLayout:
+                id: tab_events
+                Button:
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    size_hint: 1, 1
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    on_release: root.select_tab("events")
+                MDLabel:
+                    text: "Events"
+                    theme_text_color: "Custom"
+                    text_color: app.selected_chip_text_color if root.selected_tab == "events" else app.muted_text_color
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+                    bold: True
+                    font_size: sp(14)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+            MDFloatLayout:
+                id: tab_content
+                Button:
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    size_hint: 1, 1
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    on_release: root.select_tab("content")
+                MDLabel:
+                    text: "Content"
+                    theme_text_color: "Custom"
+                    text_color: app.selected_chip_text_color if root.selected_tab == "content" else app.muted_text_color
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+                    bold: True
+                    font_size: sp(14)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(42)
+            padding: [dp(14), 0, dp(12), 0]
+            spacing: dp(12)
+            canvas.before:
+                Color:
+                    rgba: app.surface_color
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(15)]
+            MDIcon:
+                icon: "magnify"
+                theme_text_color: "Custom"
+                text_color: app.muted_text_color
+                font_size: dp(20)
+                size_hint: None, None
+                size: dp(20), dp(20)
+                pos_hint: {"center_y": 0.5}
+            TextInput:
+                id: search_input
+                text: root.search_text
+                hint_text: "Search saved..."
+                hint_text_color: app.muted_text_color
+                foreground_color: app.primary_text_color
+                background_color: 0, 0, 0, 0
+                cursor_color: app.primary_text_color
+                multiline: False
+                font_size: sp(14)
+                size_hint_y: None
+                height: dp(24)
+                pos_hint: {"center_y": 0.5}
+                padding: [0, dp(2), 0, 0]
+                on_text: root.search_text = self.text
+            MDIcon:
+                icon: "arrow-right"
+                theme_text_color: "Custom"
+                text_color: app.muted_text_color
+                font_size: dp(20)
+                size_hint: None, None
+                size: dp(20), dp(20)
+                pos_hint: {"center_y": 0.5}
+
+        MDLabel:
+            text: root.saved_status
+            theme_text_color: "Custom"
+            text_color: 0.91, 0.45, 0.45, 1
+            font_size: sp(11.5)
+            size_hint_y: None
+            height: self.texture_size[1] if self.text else 0
+            text_size: self.width, None
+            halign: "left"
+
+        ScrollView:
+            bar_width: 0
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(12)
+                MDBoxLayout:
+                    id: saved_empty_state
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: dp(240)
+                    Widget:
+                    MDLabel:
+                        text: "Nothing saved yet"
+                        theme_text_color: "Custom"
+                        text_color: 0.47, 0.50, 0.55, 1
+                        font_size: sp(17)
+                        bold: True
+                        halign: "center"
+                        size_hint_y: None
+                        height: self.texture_size[1]
+                    Widget:
+                MDBoxLayout:
+                    id: saved_items_box
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: [0, dp(4), 0, dp(16)]
+                    spacing: dp(12)

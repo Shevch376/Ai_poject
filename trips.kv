@@ -1,0 +1,160 @@
+<TripsScreen>:
+    md_bg_color: app.app_bar_bg_color
+
+    MDBoxLayout:
+        orientation: "vertical"
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(70)
+            padding: [dp(20), 0, dp(20), 0]
+            MDRelativeLayout:
+                MDIconButton:
+                    icon: "chevron-left"
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    icon_size: dp(18)
+                    theme_text_color: "Custom"
+                    text_color: app.primary_text_color
+                    md_bg_color: app.surface_color
+                    pos_hint: {"x": 0, "center_y": 0.5}
+                    on_release: root.go_back()
+                MDLabel:
+                    text: "Support"
+                    halign: "center"
+                    font_size: sp(22)
+                    bold: True
+                    theme_text_color: "Custom"
+                    text_color: app.primary_text_color
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+        MDAnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            MDLabel:
+                text: "Support chat is being prepared"
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.5, 0.5, 0.5, 1
+                font_size: sp(15)
+                size_hint_x: 0.8
+
+        # Р’РІРѕРґ РґР°РЅРЅС‹С… РїРѕР»РЅРѕСЃС‚СЊСЋ РёР· ChatInterface
+        MDBoxLayout:
+            orientation: "horizontal"
+            size_hint_y: None
+            height: dp(90)
+            padding: [dp(15), dp(10), dp(15), dp(25)]
+            spacing: dp(10)
+
+            RelativeLayout:
+                size_hint_x: 1
+                canvas.before:
+                    Color:
+                        rgba: app.surface_color
+                    RoundedRectangle:
+                        pos: 0, 0
+                        size: self.size
+                        radius: [dp(25)]
+
+                TextInput:
+                    id: user_input
+                    hint_text: "Message..."
+                    hint_text_color: app.muted_text_color
+                    foreground_color: app.primary_text_color
+                    background_color: 0, 0, 0, 0
+                    cursor_color: app.primary_text_color
+                    multiline: False
+                    size_hint: 1, None
+                    height: dp(40)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    padding: [dp(20), dp(10), dp(50), dp(10)]
+                    opacity: 1 if root.voice_mode == "idle" else 0
+                    disabled: root.voice_mode != "idle"
+
+                MDIconButton:
+                    icon: "send"
+                    theme_icon_color: "Custom"
+                    icon_color: 1, 1, 1, 1
+                    pos_hint: {"right": 1, "center_y": 0.5}
+                    opacity: 1 if root.voice_mode == "idle" else 0
+                    disabled: root.voice_mode != "idle"
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    size_hint: 1, None
+                    height: dp(40)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    opacity: 1 if root.voice_mode == "recording" else 0
+                    spacing: dp(8)
+                    padding: [dp(16), 0, dp(12), 0]
+                    MDIcon:
+                        icon: "delete"
+                        theme_text_color: "Custom"
+                        text_color: (1, 1, 1, 1) if root.voice_cancel_ready else (0.75 + 0.2 * root.voice_cancel_progress, 0.28, 0.33, 0.25 + 0.75 * root.voice_cancel_progress)
+                        font_size: dp(22) if root.voice_cancel_ready else dp(18)
+                        size_hint: None, None
+                        size: dp(28), dp(28)
+                        pos_hint: {"center_y": 0.5}
+                        canvas.before:
+                            Color:
+                                rgba: (0.92, 0.24, 0.30, 1) if root.voice_cancel_ready else (0.92, 0.24, 0.30, 0)
+                            Ellipse:
+                                pos: self.center_x - dp(17), self.center_y - dp(17)
+                                size: dp(34), dp(34)
+                    MDLabel:
+                        text: root.format_voice_duration(root.voice_elapsed)
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        font_size: sp(15)
+                        bold: True
+                        size_hint_x: None
+                        width: dp(52)
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+                    MDIcon:
+                        icon: "arrow-left"
+                        theme_text_color: "Custom"
+                        text_color: 0.70 + 0.25 * root.voice_cancel_progress, 0.70, 0.72, 1
+                        font_size: dp(17)
+                        size_hint: None, None
+                        size: dp(16), dp(16)
+                        pos_hint: {"center_y": 0.5}
+                    MDLabel:
+                        text: "Swipe left to cancel"
+                        theme_text_color: "Custom"
+                        text_color: 0.78 + 0.18 * root.voice_cancel_progress, 0.80, 0.84, 1
+                        font_size: sp(13)
+                        size_hint_x: 1
+                        halign: "left"
+                        valign: "middle"
+                        text_size: self.size
+
+            MDFloatLayout:
+                id: record_btn_wrap
+                size_hint: None, None
+                size: dp(50), dp(50)
+                pos_hint: {"center_y": .5}
+                opacity: 0 if root.voice_cancel_ready else 1
+                canvas.before:
+                    Color:
+                        rgba: [0.102, 0.114, 0.122, 1] if root.voice_mode == "idle" else [0.871, 0.204, 0.267, 1]
+                    Ellipse:
+                        pos: self.pos
+                        size: self.size
+                Button:
+                    id: record_btn
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    size_hint: 1, 1
+                    pos: self.parent.pos
+                    size: self.parent.size
+                    on_release: root.send_voice_message()
+                MDIcon:
+                    icon: "microphone" if root.voice_mode == "idle" else "send"
+                    theme_text_color: "Custom"
+                    text_color: app.primary_text_color
+                    font_size: dp(23)
+                    pos_hint: {"center_x": .5, "center_y": .5}

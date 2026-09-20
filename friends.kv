@@ -1,0 +1,80 @@
+<FriendsScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.app_bar_bg_color
+        padding: [dp(20), dp(16), dp(20), dp(24)]
+        spacing: 0
+
+        MDFloatLayout:
+            size_hint_y: None
+            height: dp(40)
+            MDIconButton:
+                icon: "chevron-left"
+                size_hint: None, None
+                size: dp(40), dp(40)
+                icon_size: dp(18)
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                md_bg_color: app.surface_color
+                pos_hint: {"x": 0, "center_y": 0.5}
+                on_release: app.switch_screen("profile", 'right')
+
+        Widget:
+            size_hint_y: None
+            height: dp(12)
+
+        MDLabel:
+            text: "Friends"
+            font_size: sp(22)
+            bold: True
+            theme_text_color: "Custom"
+            text_color: app.primary_text_color
+            halign: "center"
+            adaptive_height: True
+
+        Widget:
+            size_hint_y: None
+            height: dp(16)
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(56)
+            padding: [dp(16), 0]
+            canvas.before:
+                Color:
+                    rgba: app.surface_color
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(16)]
+
+            RelativeLayout:
+                MDIcon:
+                    icon: "magnify"
+                    theme_text_color: "Custom"
+                    text_color: 0.5, 0.5, 0.5, 1
+                    pos_hint: {"center_x": .08, "center_y": .5}
+                    font_size: dp(20)
+
+                TextInput:
+                    hint_text: "Search friends..."
+                    hint_text_color: app.muted_text_color
+                    multiline: False
+                    background_color: 0, 0, 0, 0
+                    foreground_color: app.primary_text_color
+                    cursor_color: app.primary_text_color
+                    font_size: sp(16)
+                    size_hint: 1, None
+                    height: dp(40)
+                    pos_hint: {"center_x": .55, "center_y": .5}
+                    padding: [dp(40), (self.height - self.line_height) / 2, 0, 0]
+
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            MDLabel:
+                text: "Sign in to view your friends."
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: 0.3, 0.3, 0.3, 1
+                font_size: sp(15)

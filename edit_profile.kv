@@ -1,0 +1,546 @@
+<SelectableChip@ButtonBehavior+MDBoxLayout>:
+    text: ""
+    selected: False
+    size_hint: None, None
+    adaptive_width: True
+    height: dp(34)
+    padding: [dp(14), 0, dp(14), 0]
+    spacing: 0
+    radius: [dp(12)]
+    md_bg_color: app.selected_chip_color if root.selected else app.surface_color
+    on_release: root.selected = not root.selected
+    MDLabel:
+        text: root.text
+        adaptive_width: True
+        bold: True
+        font_size: sp(12)
+        theme_text_color: "Custom"
+        text_color: app.selected_chip_text_color if root.selected else app.muted_text_color
+        halign: "center"
+        valign: "middle"
+        pos_hint: {"center_y": .5}
+
+<FieldLabel@MDLabel>:
+    size_hint_y: None
+    height: self.texture_size[1]
+    font_size: sp(12)
+    theme_text_color: "Custom"
+    text_color: app.muted_text_color
+
+<ProfileField@MDBoxLayout>:
+    value_text: ""
+    right_icon: ""
+    size_hint_y: None
+    height: dp(52)
+    padding: [dp(16), 0, dp(14), 0]
+    md_bg_color: app.surface_color
+    radius: [dp(14)]
+    MDLabel:
+        text: root.value_text
+        theme_text_color: "Custom"
+        text_color: app.muted_text_color
+        font_size: sp(15)
+        halign: "left"
+        valign: "middle"
+        text_size: self.size
+        pos_hint: {"center_y": 0.5}
+    MDIcon:
+        icon: root.right_icon
+        opacity: 1 if root.right_icon else 0
+        theme_text_color: "Custom"
+        text_color: 0.40, 0.42, 0.46, 1
+        font_size: dp(18)
+        size_hint: None, None
+        size: dp(18), dp(18)
+        pos_hint: {"center_y": 0.5}
+
+<SectionTitle@MDLabel>:
+    size_hint_y: None
+    height: self.texture_size[1]
+    bold: True
+    font_size: sp(16)
+    theme_text_color: "Custom"
+    text_color: app.primary_text_color
+
+<SectionHeader@MDBoxLayout>:
+    text: ""
+    icon: ""
+    size_hint_y: None
+    height: dp(26)
+    spacing: dp(8)
+    MDIcon:
+        icon: root.icon
+        theme_text_color: "Custom"
+        text_color: app.primary_text_color
+        font_size: sp(16)
+        size_hint: None, None
+        size: dp(18), dp(18)
+        pos_hint: {"center_y": .5}
+    MDLabel:
+        text: root.text
+        bold: True
+        font_size: sp(16)
+        theme_text_color: "Custom"
+        text_color: app.primary_text_color
+        pos_hint: {"center_y": .5}
+
+<GenderOption@ButtonBehavior+MDAnchorLayout>:
+    text: ""
+    is_selected: False
+    size_hint_y: None
+    height: dp(54)
+    anchor_x: "center"
+    anchor_y: "center"
+    on_release: app.root.get_screen('edit_profile').set_gender(root.text)
+    canvas.before:
+        Color:
+            rgba: (0.102, 0.451, 0.914, 0.14) if root.is_selected else app.surface_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [dp(16)]
+    MDLabel:
+        text: root.text
+        halign: "center"
+        bold: True
+        font_size: sp(15)
+        theme_text_color: "Custom"
+        text_color: (0.102, 0.451, 0.914, 1) if root.is_selected else app.primary_text_color
+
+<EditProfileScreen>:
+    MDRelativeLayout:
+        md_bg_color: app.app_bg_color
+
+        MDBoxLayout:
+            orientation: "vertical"
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(78)
+                padding: [dp(14), dp(18), dp(14), 0]
+                MDFloatLayout:
+                    MDFloatLayout:
+                        size_hint: None, None
+                        size: dp(40), dp(40)
+                        pos_hint: {"x": 0, "center_y": 0.5}
+                        canvas.before:
+                            Color:
+                                rgba: app.surface_color
+                            Ellipse:
+                                pos: self.pos
+                                size: self.size
+                        Button:
+                            size: root.size
+                            pos: root.pos
+                            size_hint: None, None
+                            background_color: 0, 0, 0, 0
+                            background_normal: ""
+                            background_down: ""
+                            on_release: root.go_back()
+                        MDIcon:
+                            icon: "chevron-left"
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            font_size: dp(21)
+                            pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    MDLabel:
+                        text: "Update Profile"
+                        halign: "center"
+                        font_size: sp(21)
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        pos_hint: {"center_x": .5, "center_y": .5}
+
+            ScrollView:
+                id: main_scroll
+                do_scroll_x: False
+                bar_width: 0
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: self.minimum_height
+                    padding: [dp(14), dp(10), dp(14), dp(100)]
+                    spacing: dp(20)
+
+                    MDCard:
+                        size_hint_y: None
+                        height: dp(150)
+                        radius: [dp(22)]
+                        md_bg_color: app.surface_strong_color
+                        elevation: 0
+                        orientation: "horizontal"
+                        padding: [dp(18), dp(18), dp(18), dp(16)]
+                        spacing: dp(12)
+
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            size_hint_x: 0.76
+                            spacing: dp(10)
+
+                            MDLabel:
+                                text: "Update your info to make your\nrecommendations more personal"
+                                size_hint_y: None
+                                height: dp(44)
+                                bold: True
+                                font_size: sp(16)
+                                theme_text_color: "Custom"
+                                text_color: app.primary_text_color
+                                line_height: 1.15
+                                halign: "left"
+                                valign: "top"
+                                text_size: self.width, self.height
+
+                            MDLabel:
+                                text: "Adding more interests improves accuracy. If you want to\nachieve the maximum level of personalization, subscribe to\nthe premium plan by clicking on the link:"
+                                size_hint_y: None
+                                height: dp(52)
+                                font_size: sp(12)
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                line_height: 1.18
+                                halign: "left"
+                                valign: "top"
+                                text_size: self.width, self.height
+
+                        MDBoxLayout:
+                            orientation: "vertical"
+                            size_hint_x: 0.24
+                            spacing: dp(8)
+
+                            MDLabel:
+                                text: "Personalization:"
+                                size_hint_y: None
+                                height: dp(18)
+                                font_size: sp(12)
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                halign: "center"
+                                valign: "middle"
+                                text_size: self.size
+
+                            MDFloatLayout:
+                                size_hint: None, None
+                                size: dp(76), dp(76)
+                                pos_hint: {"center_x": .5}
+                                Widget:
+                                    size_hint: None, None
+                                    size: dp(76), dp(76)
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+                                    canvas:
+                                        Color:
+                                            rgba: app.divider_color
+                                        Line:
+                                            circle: (self.center_x, self.center_y, dp(34), 0, 360)
+                                            width: 2
+                                        Color:
+                                            rgba: 0.102, 0.451, 0.914, 1
+                                        Line:
+                                            circle: (self.center_x, self.center_y, dp(34), 90, 396)
+                                            width: 3
+                                            cap: "round"
+                                MDLabel:
+                                    text: "85%"
+                                    halign: "center"
+                                    bold: True
+                                    font_size: sp(16)
+                                    theme_text_color: "Custom"
+                                    text_color: app.primary_text_color
+                                    pos_hint: {"center_x": .5, "center_y": .5}
+
+                    SectionTitle:
+                        text: "Personal details"
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(14)
+
+                        FieldLabel:
+                            text: "Name"
+                        ProfileField:
+                            id: name_field
+                            value_text: "David Jerome"
+
+                        FieldLabel:
+                            text: "Gender"
+                        ProfileField:
+                            id: gender_field_box
+                            value_text: gender_field.text
+                            right_icon: "chevron-down"
+                            on_touch_down: if self.collide_point(*args[1].pos): root.open_gender_menu()
+                        MDTextField:
+                            id: gender_field
+                            text: "Other"
+                            opacity: 0
+                            disabled: True
+                            size_hint_y: None
+                            height: 0
+
+                        FieldLabel:
+                            text: "City"
+                        ProfileField:
+                            id: city_field
+                            value_text: "London, UK"
+
+                        FieldLabel:
+                            text: "Language"
+                        ProfileField:
+                            id: language_field
+                            value_text: "English"
+                            right_icon: "chevron-down"
+
+                        FieldLabel:
+                            text: "Email"
+                        ProfileField:
+                            id: email_field_box
+                            value_text: "Not set"
+
+                        FieldLabel:
+                            text: "Your age range"
+                        ProfileField:
+                            id: age_field
+                            value_text: "45+"
+                            right_icon: "chevron-down"
+
+                    SectionTitle:
+                        text: "Interests & categories"
+
+                    MDStackLayout:
+                        id: lifestyle_chips
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(8)
+                        SelectableChip:
+                            text: "Music, Concerts, Festivals"
+                        SelectableChip:
+                            text: "Cafes, Restaurants, Bars & Lounges"
+                        SelectableChip:
+                            text: "Nature Walks, Hiking, Parks"
+                        SelectableChip:
+                            text: "Fitness, Yoga, Running"
+                        SelectableChip:
+                            text: "Art Galleries, Museums, Theater"
+                        SelectableChip:
+                            text: "Tech & Gadgets, Science, Self-Improvement"
+                            selected: True
+                        SelectableChip:
+                            text: "Gaming, Reading, Cooking"
+
+                    SectionTitle:
+                        text: "Favorite genres"
+
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_height
+                        spacing: dp(16)
+
+                        SectionHeader:
+                            text: "Movies / Series"
+                            icon: "movie-roll"
+                        MDStackLayout:
+                            id: focus_chips
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(8)
+                            SelectableChip:
+                                text: "Action"
+                                selected: True
+                            SelectableChip:
+                                text: "Drama"
+                            SelectableChip:
+                                text: "Comedy"
+                            SelectableChip:
+                                text: "Romance"
+                            SelectableChip:
+                                text: "Sci-Fi"
+                            SelectableChip:
+                                text: "Thriller"
+                            SelectableChip:
+                                text: "Fantasy"
+                            SelectableChip:
+                                text: "Documentary"
+                            SelectableChip:
+                                text: "Mystery"
+                            SelectableChip:
+                                text: "Animation"
+                            SelectableChip:
+                                text: "Horror"
+
+                        SectionHeader:
+                            text: "Music"
+                            icon: "music-note"
+                        MDStackLayout:
+                            id: activity_chips
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(8)
+                            SelectableChip:
+                                text: "Pop"
+                                selected: True
+                            SelectableChip:
+                                text: "Rock"
+                            SelectableChip:
+                                text: "Jazz"
+                            SelectableChip:
+                                text: "Indie"
+                            SelectableChip:
+                                text: "Classical"
+                            SelectableChip:
+                                text: "Hip-Hop"
+                            SelectableChip:
+                                text: "Electronic"
+                            SelectableChip:
+                                text: "Ambient"
+                            SelectableChip:
+                                text: "Lo-Fi"
+                            SelectableChip:
+                                text: "R&B"
+                            SelectableChip:
+                                text: "Chill"
+
+                        SectionHeader:
+                            text: "Art / Lifestyle"
+                            icon: "palette-outline"
+                        MDStackLayout:
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(8)
+                            SelectableChip:
+                                text: "Modern Art"
+                                selected: True
+                            SelectableChip:
+                                text: "Photography"
+                            SelectableChip:
+                                text: "Street Art"
+                            SelectableChip:
+                                text: "Fashion"
+                            SelectableChip:
+                                text: "Design"
+                            SelectableChip:
+                                text: "Architecture"
+
+                        SectionHeader:
+                            text: "Games / Media"
+                            icon: "gamepad-variant-outline"
+                        MDStackLayout:
+                            size_hint_y: None
+                            height: self.minimum_height
+                            spacing: dp(8)
+                            SelectableChip:
+                                text: "Adventure"
+                                selected: True
+                            SelectableChip:
+                                text: "Strategy"
+                            SelectableChip:
+                                text: "Simulation"
+                            SelectableChip:
+                                text: "RPG"
+                            SelectableChip:
+                                text: "Casual"
+
+                    SectionTitle:
+                        text: "About you (optional)"
+
+                    MDCard:
+                        size_hint_y: None
+                        height: dp(118)
+                        radius: [dp(14)]
+                        elevation: 0
+                        md_bg_color: app.surface_color
+                        padding: [dp(14), dp(12), dp(14), dp(12)]
+                        MDTextField:
+                            hint_text: "I love cozy places..."
+                            mode: "rectangle"
+                            multiline: True
+                            line_color_normal: 0, 0, 0, 0
+                            line_color_focus: 0, 0, 0, 0
+                            fill_color_normal: 0, 0, 0, 0
+                            fill_color_focus: 0, 0, 0, 0
+                            text_color_normal: 1, 1, 1, 1
+                            hint_text_color_normal: 0.62, 0.64, 0.68, 1
+                            size_hint_y: 1
+                            pos_hint: {"top": 1}
+
+                    Button:
+                        text: "Save changes"
+                        size_hint_y: None
+                        height: dp(54)
+                        background_color: 0, 0, 0, 0
+                        font_size: sp(16)
+                        bold: True
+                        color: 1, 1, 1, 1
+                        on_release: root.save_profile()
+                        canvas.before:
+                            Color:
+                                rgba: 0.102, 0.451, 0.914, 1 if not root.save_loading else (0.082, 0.361, 0.734, 1)
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(18)]
+                    MDLabel:
+                        text: root.save_status
+                        theme_text_color: "Custom"
+                        text_color: 0.91, 0.45, 0.45, 1
+                        font_size: sp(11.5)
+                        size_hint_y: None
+                        height: self.texture_size[1] if self.text else 0
+                        text_size: self.width, None
+                        halign: "left"
+
+        Widget:
+            id: overlay
+            size_hint: 1, 1
+            opacity: root.opacity_bg
+            canvas:
+                Color:
+                    rgba: 0, 0, 0, 0.7
+                Rectangle:
+                    size: self.size
+                    pos: self.pos
+            on_touch_down: if self.opacity > 0: root.close_gender_menu()
+
+        MDBoxLayout:
+            id: gender_sheet
+            orientation: "vertical"
+            size_hint_y: None
+            height: dp(320)
+            md_bg_color: app.surface_color
+            radius: [dp(28), dp(28), 0, 0]
+            y: root.sheet_pos
+            padding: [dp(20), dp(18), dp(20), dp(28)]
+            spacing: dp(12)
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(4)
+                width: dp(40)
+                pos_hint: {"center_x": .5}
+                md_bg_color: app.surface_color
+                radius: [dp(2)]
+
+            MDLabel:
+                text: "Select Gender"
+                halign: "center"
+                bold: True
+                font_size: sp(20)
+                size_hint_y: None
+                height: dp(34)
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+
+            MDBoxLayout:
+                orientation: "vertical"
+                adaptive_height: True
+                spacing: dp(10)
+                GenderOption:
+                    text: "Male"
+                    is_selected: gender_field.text == "Male"
+                GenderOption:
+                    text: "Female"
+                    is_selected: gender_field.text == "Female"
+                GenderOption:
+                    text: "Other"
+                    is_selected: gender_field.text == "Other"

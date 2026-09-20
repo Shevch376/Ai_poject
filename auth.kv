@@ -1,0 +1,346 @@
+<AuthAltButton@Button>:
+    btn_text: ""
+    icon_name: ""
+    size_hint: 1, None
+    height: dp(52)
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: app.surface_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [dp(16)]
+    AnchorLayout:
+        pos: root.pos
+        size: root.size
+        anchor_x: "center"
+        anchor_y: "center"
+        MDBoxLayout:
+            adaptive_width: True
+            orientation: "horizontal"
+            spacing: dp(10)
+            size_hint: None, None
+            height: dp(20)
+            MDIcon:
+                icon: root.icon_name
+                size_hint: None, None
+                size: dp(18), dp(18)
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                font_size: dp(18)
+                pos_hint: {"center_y": 0.5}
+            MDLabel:
+                text: root.btn_text
+                adaptive_size: True
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                font_size: sp(15)
+                bold: True
+                pos_hint: {"center_y": 0.5}
+
+<AuthScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.app_bg_color
+        padding: [dp(26), 0, dp(26), 0]
+
+        Widget:
+            size_hint_y: None
+            height: dp(28)
+
+        MDFloatLayout:
+            size_hint: None, None
+            size: dp(40), dp(40)
+            pos_hint: {"x": 0}
+            opacity: 1 if root.show_back_btn else 0
+            disabled: not root.show_back_btn
+            canvas.before:
+                Color:
+                    rgba: app.surface_color
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+            Button:
+                size: root.size
+                pos: root.pos
+                size_hint: None, None
+                background_color: 0, 0, 0, 0
+                background_normal: ""
+                background_down: ""
+                on_release: app.switch_screen("location_screen", "right")
+            MDIcon:
+                icon: "chevron-left"
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                font_size: dp(21)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Widget:
+            size_hint_y: None
+            height: dp(36)
+
+        MDLabel:
+            text: "Create an account"
+            font_size: sp(28)
+            bold: True
+            theme_text_color: "Custom"
+            text_color: app.primary_text_color
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Widget:
+            size_hint_y: None
+            height: dp(10)
+
+        MDLabel:
+            text: "Enter your details to stay synced"
+            font_size: sp(14)
+            theme_text_color: "Custom"
+            text_color: app.muted_text_color
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+            text_size: self.width, None
+            line_height: 1.35
+
+        Widget:
+            size_hint_y: None
+            height: dp(28)
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(10)
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(52)
+                padding: [dp(16), 0, dp(16), 0]
+                canvas.before:
+                    Color:
+                        rgba: app.surface_color
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(16)]
+                MDIcon:
+                    icon: "email-outline"
+                    theme_text_color: "Custom"
+                    text_color: app.muted_text_color
+                    font_size: dp(18)
+                    size_hint: None, None
+                    size: dp(22), dp(22)
+                    pos_hint: {"center_y": 0.5}
+                TextInput:
+                    id: email_field
+                    hint_text: "Email address"
+                    hint_text_color: app.muted_text_color
+                    multiline: False
+                    font_size: sp(15)
+                    cursor_color: app.primary_text_color
+                    foreground_color: app.primary_text_color
+                    background_color: 0, 0, 0, 0
+                    padding: [dp(10), (self.height - self.line_height) / 2, 0, 0]
+                    on_text: root.check_form(0)
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(52)
+                padding: [dp(16), 0, dp(10), 0]
+                canvas.before:
+                    Color:
+                        rgba: app.surface_color
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(16)]
+                MDIcon:
+                    icon: "lock-outline"
+                    theme_text_color: "Custom"
+                    text_color: app.muted_text_color
+                    font_size: dp(18)
+                    size_hint: None, None
+                    size: dp(22), dp(22)
+                    pos_hint: {"center_y": 0.5}
+                TextInput:
+                    id: pass_field
+                    hint_text: "Password"
+                    hint_text_color: app.muted_text_color
+                    multiline: False
+                    password: True
+                    font_size: sp(15)
+                    cursor_color: app.primary_text_color
+                    foreground_color: app.primary_text_color
+                    background_color: 0, 0, 0, 0
+                    padding: [dp(10), (self.height - self.line_height) / 2, 0, 0]
+                    on_text: root.check_form(0)
+                MDIconButton:
+                    icon: "eye-off-outline"
+                    theme_text_color: "Custom"
+                    text_color: app.muted_text_color
+                    on_release: pass_field.password = not pass_field.password; self.icon = "eye-outline" if not pass_field.password else "eye-off-outline"
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(52)
+                padding: [dp(16), 0, dp(10), 0]
+                canvas.before:
+                    Color:
+                        rgba: app.surface_color
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(16)]
+                MDIcon:
+                    icon: "lock-check-outline"
+                    theme_text_color: "Custom"
+                    text_color: app.muted_text_color
+                    font_size: dp(18)
+                    size_hint: None, None
+                    size: dp(22), dp(22)
+                    pos_hint: {"center_y": 0.5}
+                TextInput:
+                    id: confirm_field
+                    hint_text: "Confirm password"
+                    hint_text_color: app.muted_text_color
+                    multiline: False
+                    password: True
+                    font_size: sp(15)
+                    cursor_color: app.primary_text_color
+                    foreground_color: app.primary_text_color
+                    background_color: 0, 0, 0, 0
+                    padding: [dp(10), (self.height - self.line_height) / 2, 0, 0]
+                    on_text: root.check_form(0)
+                MDIconButton:
+                    icon: "eye-off-outline"
+                    theme_text_color: "Custom"
+                    text_color: app.muted_text_color
+                    on_release: confirm_field.password = not confirm_field.password; self.icon = "eye-outline" if not confirm_field.password else "eye-off-outline"
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(4)
+
+            MDLabel:
+                text: "Enter a valid email" if email_field.text and not ("@" in email_field.text and "." in email_field.text.split("@")[-1]) else ""
+                font_size: sp(11)
+                theme_text_color: "Custom"
+                text_color: 0.91, 0.45, 0.45, 1
+                size_hint_y: None
+                height: self.texture_size[1] if self.text else 0
+                halign: "left"
+
+            MDLabel:
+                text: "Password must be at least 6 characters" if pass_field.text and len(pass_field.text) < 6 else ""
+                font_size: sp(11)
+                theme_text_color: "Custom"
+                text_color: 0.91, 0.45, 0.45, 1
+                size_hint_y: None
+                height: self.texture_size[1] if self.text else 0
+                halign: "left"
+
+            MDLabel:
+                text: "Passwords do not match" if confirm_field.text and pass_field.text != confirm_field.text else ""
+                font_size: sp(11)
+                theme_text_color: "Custom"
+                text_color: 0.91, 0.45, 0.45, 1
+                size_hint_y: None
+                height: self.texture_size[1] if self.text else 0
+                halign: "left"
+
+            MDLabel:
+                text: root.auth_status
+                font_size: sp(11.5)
+                theme_text_color: "Custom"
+                text_color: 0.91, 0.45, 0.45, 1
+                size_hint_y: None
+                height: self.texture_size[1] if self.text else 0
+                halign: "left"
+                text_size: self.width, None
+
+        Widget:
+            size_hint_y: None
+            height: dp(20)
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(20)
+            spacing: dp(12)
+            Widget:
+                canvas.before:
+                    Color:
+                        rgba: app.divider_color
+                    RoundedRectangle:
+                        pos: self.x, self.center_y - dp(0.5)
+                        size: self.width, dp(1)
+                        radius: [dp(1)]
+            MDLabel:
+                text: "or"
+                adaptive_width: True
+                halign: "center"
+                theme_text_color: "Custom"
+                text_color: app.muted_text_color
+                font_size: sp(13)
+            Widget:
+                canvas.before:
+                    Color:
+                        rgba: app.divider_color
+                    RoundedRectangle:
+                        pos: self.x, self.center_y - dp(0.5)
+                        size: self.width, dp(1)
+                        radius: [dp(1)]
+
+        Widget:
+            size_hint_y: None
+            height: dp(20)
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(10)
+            AuthAltButton:
+                btn_text: "Continue with Google"
+                icon_name: "google"
+                on_release: root.start_google_login()
+            AuthAltButton:
+                btn_text: "Continue with Apple"
+                icon_name: "apple"
+                on_release: root.start_apple_login()
+
+        Widget:
+            size_hint_y: 1
+
+        Button:
+            size_hint: 1, None
+            height: dp(54)
+            background_color: 0, 0, 0, 0
+            disabled: root.auth_loading
+            on_release: if root.is_valid and not root.auth_loading: root.submit_auth()
+            canvas.before:
+                Color:
+                    rgba: (0.102, 0.451, 0.914, 1) if root.is_valid else app.disabled_surface_color
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [dp(20)]
+            MDRelativeLayout:
+                pos: self.parent.pos if self.parent else (0, 0)
+                size: self.parent.size if self.parent else (0, 0)
+                MDLabel:
+                    text: "Creating..." if root.auth_loading else "Create Account"
+                    halign: "center"
+                    bold: True
+                    font_size: sp(16)
+                    theme_text_color: "Custom"
+                    text_color: app.inverse_text_color if root.is_valid else app.muted_text_color
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+        Widget:
+            size_hint_y: None
+            height: dp(56)

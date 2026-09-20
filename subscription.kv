@@ -1,0 +1,365 @@
+<SubscriptionScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.app_bar_bg_color
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(70)
+            padding: [dp(20), 0, dp(20), 0]
+            MDRelativeLayout:
+                MDIconButton:
+                    icon: "chevron-left"
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    icon_size: dp(18)
+                    theme_text_color: "Custom"
+                    text_color: app.primary_text_color
+                    md_bg_color: app.surface_color
+                    pos_hint: {"x": 0, "center_y": 0.5}
+                    on_release: app.switch_screen("profile", 'right')
+                MDLabel:
+                    text: "Subscription & Billing"
+                    halign: "center"
+                    font_size: sp(20)
+                    bold: True
+                    theme_text_color: "Custom"
+                    text_color: app.primary_text_color
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+        ScrollView:
+            do_scroll_x: False
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                padding: [dp(20), dp(16), dp(20), dp(24)]
+                spacing: dp(26)
+
+                MDRelativeLayout:
+                    size_hint_y: None
+                    height: dp(134)
+                    MDBoxLayout:
+                        orientation: "vertical"
+                        pos_hint: {"center_x": .5, "center_y": .5}
+                        padding: [dp(18), dp(16), dp(18), dp(16)]
+                        spacing: dp(6)
+                        size_hint_y: None
+                        height: self.minimum_height
+                        canvas.before:
+                            Color:
+                                rgba: app.surface_strong_color
+                            RoundedRectangle:
+                                pos: self.pos
+                                size: self.size
+                                radius: [dp(24)]
+                            Color:
+                                rgba: 0.15, 0.25, 0.4, 1
+                            Line:
+                                width: 1
+                                rounded_rectangle: (self.x, self.y, self.width, self.height, dp(24))
+                        MDRelativeLayout:
+                            size_hint_y: None
+                            height: dp(28)
+                            MDBoxLayout:
+                                adaptive_width: True
+                                spacing: dp(10)
+                                pos_hint: {"x": 0, "center_y": .5}
+                                MDIcon:
+                                    icon: "check-circle-outline" if root.subscription_is_active else "information-outline"
+                                    theme_text_color: "Custom"
+                                    text_color: (0.2, 0.8, 0.4, 1) if root.subscription_is_active else app.muted_text_color
+                                    font_size: dp(17)
+                                    size_hint: None, None
+                                    size: dp(18), dp(18)
+                                    pos_hint: {"center_y": .5}
+                                MDLabel:
+                                    text: root.subscription_title
+                                    bold: True
+                                    font_size: sp(15)
+                                    theme_text_color: "Custom"
+                                    text_color: app.primary_text_color
+                                    adaptive_width: True
+                        MDLabel:
+                            text: root.subscription_plan_text
+                            font_size: sp(14)
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            size_hint_y: None
+                            height: dp(18)
+                        MDLabel:
+                            text: root.subscription_details_text
+                            font_size: sp(12.5)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            line_height: 1.28
+                            size_hint_y: None
+                            height: dp(50)
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    adaptive_height: True
+                    padding: [dp(18), dp(16), dp(18), dp(10)]
+                    spacing: dp(8)
+                    canvas.before:
+                        Color:
+                            rgba: app.surface_strong_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(24)]
+                    MDBoxLayout:
+                        size_hint_y: None
+                        height: dp(28)
+                        spacing: dp(10)
+                        MDIcon:
+                            icon: "wrench-outline"
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            font_size: dp(18)
+                            size_hint: None, None
+                            size: dp(18), dp(18)
+                            pos_hint: {"center_y": .5}
+                        MDLabel:
+                            text: "Subscription management"
+                            font_size: sp(15)
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            pos_hint: {"center_y": .5}
+                    MDBoxLayout:
+                        size_hint_y: None
+                        height: dp(44)
+                        padding: [dp(6), 0, 0, 0]
+                        spacing: dp(12)
+                        MDIcon:
+                            icon: "apple"
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            font_size: dp(19)
+                            size_hint: None, None
+                            size: dp(20), dp(20)
+                            pos_hint: {"center_y": .5}
+                        MDLabel:
+                            text: "Manage subscription in App Store"
+                            font_size: sp(13.5)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                            pos_hint: {"center_y": .5}
+                        MDIcon:
+                            icon: "open-in-new"
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            font_size: dp(17)
+                            size_hint: None, None
+                            size: dp(17), dp(17)
+                            pos_hint: {"center_y": .5}
+                    MDBoxLayout:
+                        size_hint_y: None
+                        height: dp(44)
+                        padding: [dp(6), 0, 0, 0]
+                        spacing: dp(12)
+                        MDIcon:
+                            icon: "google-play"
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            font_size: dp(19)
+                            size_hint: None, None
+                            size: dp(20), dp(20)
+                            pos_hint: {"center_y": .5}
+                        MDLabel:
+                            text: "Manage subscription in Google Play"
+                            font_size: sp(13.5)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            halign: "left"
+                            valign: "middle"
+                            text_size: self.size
+                            pos_hint: {"center_y": .5}
+                        MDIcon:
+                            icon: "open-in-new"
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            font_size: dp(17)
+                            size_hint: None, None
+                            size: dp(17), dp(17)
+                            pos_hint: {"center_y": .5}
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    adaptive_height: True
+                    padding: dp(20)
+                    spacing: dp(10)
+                    canvas.before:
+                        Color:
+                            rgba: app.surface_strong_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(24)]
+                    MDLabel:
+                        text: "Subscription history"
+                        bold: True
+                        font_size: sp(15)
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        adaptive_height: True
+                    MDRelativeLayout:
+                        size_hint_y: None
+                        height: dp(88)
+                        MDLabel:
+                            text: "16 Jan 2025 - Trial activated"
+                            size_hint: None, None
+                            size: dp(210), dp(16)
+                            pos: 0, dp(66)
+                            font_size: sp(13)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                        MDLabel:
+                            text: "23 Jan 2025 - Subscription renewed ($4.99)"
+                            size_hint: None, None
+                            size: dp(210), dp(32)
+                            text_size: self.size
+                            valign: "top"
+                            pos: 0, dp(26)
+                            font_size: sp(13)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                        MDLabel:
+                            text: "View in App Store"
+                            size_hint: None, None
+                            size: dp(108), dp(18)
+                            pos_hint: {"right": 1}
+                            y: dp(6)
+                            font_size: sp(12.5)
+                            bold: True
+                            theme_text_color: "Custom"
+                            text_color: 0.2, 0.5, 0.8, 1
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint_y: None
+                    height: faq_header.height + faq_body.height
+                    padding: [0, 0, 0, 0]
+                    spacing: dp(0)
+                    canvas.before:
+                        Color:
+                            rgba: app.surface_strong_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(20)]
+                    Button:
+                        id: faq_header
+                        size_hint_y: None
+                        height: dp(56)
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        on_release: root.faq_open = not root.faq_open
+                        MDBoxLayout:
+                            orientation: "horizontal"
+                            pos: self.parent.pos
+                            size: self.parent.width, self.parent.height
+                            padding: [dp(20), 0, dp(15), 0]
+                            spacing: dp(15)
+                            MDIcon:
+                                icon: "help-circle-outline"
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                font_size: dp(20)
+                                pos_hint: {"center_y": .5}
+                            MDLabel:
+                                text: "FAQ"
+                                bold: True
+                                theme_text_color: "Custom"
+                                text_color: app.primary_text_color
+                                pos_hint: {"center_y": .5}
+                            MDIcon:
+                                icon: "chevron-up" if root.faq_open else "chevron-down"
+                                theme_text_color: "Custom"
+                                text_color: app.muted_text_color
+                                font_size: dp(18)
+                                pos_hint: {"center_y": .5}
+                    MDBoxLayout:
+                        id: faq_body
+                        orientation: "vertical"
+                        size_hint_y: None
+                        height: self.minimum_height if root.faq_open else 0
+                        opacity: 1 if root.faq_open else 0
+                        padding: [dp(20), dp(6), dp(20), dp(16)]
+                        spacing: dp(8)
+                        MDLabel:
+                            text: "What happens after the 7-day trial?"
+                            bold: True
+                            font_size: sp(13.5)
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                        MDLabel:
+                            text: "Your subscription will automatically renew for $4.99 / month."
+                            font_size: sp(12.5)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                        MDLabel:
+                            text: "Can I cancel my subscription?"
+                            bold: True
+                            font_size: sp(13.5)
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                        MDLabel:
+                            text: "Yes, via the App Store / Google Play."
+                            font_size: sp(12.5)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                        MDLabel:
+                            text: "Will my data be saved after cancellation?"
+                            bold: True
+                            font_size: sp(13.5)
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                        MDLabel:
+                            text: "Yes."
+                            font_size: sp(12.5)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                        MDLabel:
+                            text: "Will I be charged if I cancel before the end of the trial?"
+                            bold: True
+                            font_size: sp(13.5)
+                            theme_text_color: "Custom"
+                            text_color: app.primary_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+                        MDLabel:
+                            text: "No."
+                            font_size: sp(12.5)
+                            theme_text_color: "Custom"
+                            text_color: app.muted_text_color
+                            size_hint_y: None
+                            height: self.texture_size[1]
+
+                MDBoxLayout:
+                    size_hint_y: None
+                    height: dp(40)
+                    MDLabel:
+                        text: "Terms of Use    |    Privacy Policy"
+                        halign: "center"
+                        font_size: sp(12)
+                        theme_text_color: "Custom"
+                        text_color: 0.2, 0.5, 0.8, 1

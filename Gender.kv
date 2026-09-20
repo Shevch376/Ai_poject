@@ -1,0 +1,158 @@
+<GenderButton@ToggleButton>:
+    text: ""
+    color: app.selected_chip_text_color if self.state == "down" else app.primary_text_color
+    size_hint_y: None
+    height: dp(52)
+    background_color: 0, 0, 0, 0
+    group: "gender"
+    font_size: sp(15)
+    bold: True
+    text_size: self.size
+    halign: "center"
+    valign: "middle"
+    canvas.before:
+        Color:
+            rgba: app.selected_chip_color if self.state == "down" else app.surface_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [dp(16)]
+
+<GenderScreen>:
+    name: "gender"
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.app_bg_color
+        padding: [dp(26), 0, dp(26), 0]
+
+        Widget:
+            size_hint_y: None
+            height: dp(28)
+
+        MDFloatLayout:
+            size_hint: None, None
+            size: dp(40), dp(40)
+            pos_hint: {"x": 0}
+            canvas.before:
+                Color:
+                    rgba: app.surface_color
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+            Button:
+                size: root.size
+                pos: root.pos
+                size_hint: None, None
+                background_color: 0, 0, 0, 0
+                background_normal: ""
+                background_down: ""
+                on_release: app.switch_screen("welcome", "right")
+            MDIcon:
+                icon: "chevron-left"
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                font_size: dp(21)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Widget:
+            size_hint_y: None
+            height: dp(18)
+
+        Widget:
+            size_hint_y: None
+            height: dp(3)
+            canvas.before:
+                Color:
+                    rgba: app.divider_color
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(3)]
+                Color:
+                    rgba: 0.102, 0.451, 0.914, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: (app.progress_width, self.height)
+                    radius: [dp(3)]
+
+        Widget:
+            size_hint_y: None
+            height: dp(26)
+
+        MDLabel:
+            text: "Choose your gender"
+            font_size: sp(28)
+            bold: True
+            theme_text_color: "Custom"
+            text_color: app.primary_text_color
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Widget:
+            size_hint_y: None
+            height: dp(10)
+
+        MDLabel:
+            text: "This will help me personalize your leisure plan and recommendations"
+            font_size: sp(14)
+            theme_text_color: "Custom"
+            text_color: app.muted_text_color
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+            text_size: self.width, None
+            line_height: 1.35
+
+        Widget:
+            size_hint_y: None
+            height: dp(22)
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(10)
+            GenderButton:
+                text: "Female"
+                state: "down" if root.selected_gender == "female" else "normal"
+                on_release: root.selected_gender = "female"
+            GenderButton:
+                text: "Male"
+                state: "down" if root.selected_gender == "male" else "normal"
+                on_release: root.selected_gender = "male"
+            GenderButton:
+                text: "Other"
+                state: "down" if root.selected_gender == "other" else "normal"
+                on_release: root.selected_gender = "other"
+
+        Widget:
+            size_hint_y: 1
+
+        Button:
+            size_hint: 1, None
+            height: dp(54)
+            background_color: 0, 0, 0, 0
+            on_release: if root.selected_gender: app.switch_screen("age_screen", "left")
+            canvas.before:
+                Color:
+                    rgba: app.selected_chip_color if root.selected_gender else app.disabled_surface_color
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [dp(20)]
+            MDRelativeLayout:
+                pos: self.parent.pos if self.parent else (0, 0)
+                size: self.parent.size if self.parent else (0, 0)
+                MDLabel:
+                    text: "Continue"
+                    halign: "center"
+                    bold: True
+                    font_size: sp(16)
+                    theme_text_color: "Custom"
+                    text_color: app.selected_chip_text_color if root.selected_gender else app.muted_text_color
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+        Widget:
+            size_hint_y: None
+            height: dp(56)

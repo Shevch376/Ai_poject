@@ -1,0 +1,226 @@
+<LocationOptionButton@Button>:
+    choice_text: ""
+    icon_name: ""
+    size_hint: 1, None
+    height: dp(52)
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: app.surface_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [dp(16)]
+    AnchorLayout:
+        pos: root.pos
+        size: root.size
+        anchor_x: "center"
+        anchor_y: "center"
+        MDBoxLayout:
+            adaptive_width: True
+            orientation: "horizontal"
+            spacing: dp(10)
+            size_hint: None, None
+            height: dp(20)
+            MDIcon:
+                icon: root.icon_name
+                size_hint: None, None
+                size: dp(18), dp(18)
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                font_size: dp(18)
+                pos_hint: {"center_y": 0.5}
+            MDLabel:
+                text: root.choice_text
+                adaptive_size: True
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                font_size: sp(15)
+                bold: True
+                pos_hint: {"center_y": 0.5}
+
+<LocationScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.app_bg_color
+        padding: [dp(26), 0, dp(26), 0]
+
+        Widget:
+            size_hint_y: None
+            height: dp(28)
+
+        MDFloatLayout:
+            size_hint: None, None
+            size: dp(40), dp(40)
+            pos_hint: {"x": 0}
+            canvas.before:
+                Color:
+                    rgba: app.surface_color
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+            Button:
+                size: root.size
+                pos: root.pos
+                size_hint: None, None
+                background_color: 0, 0, 0, 0
+                background_normal: ""
+                background_down: ""
+                on_release: app.switch_screen("activity_screen", "right")
+            MDIcon:
+                icon: "chevron-left"
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                font_size: dp(21)
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Widget:
+            size_hint_y: None
+            height: dp(18)
+
+        Widget:
+            size_hint_y: None
+            height: dp(3)
+            canvas.before:
+                Color:
+                    rgba: app.divider_color
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(3)]
+                Color:
+                    rgba: 0.102, 0.451, 0.914, 1
+                RoundedRectangle:
+                    pos: self.pos
+                    size: (app.progress_width, self.height)
+                    radius: [dp(3)]
+
+        Widget:
+            size_hint_y: None
+            height: dp(26)
+
+        MDLabel:
+            text: "Where are you?"
+            font_size: sp(28)
+            bold: True
+            theme_text_color: "Custom"
+            text_color: app.primary_text_color
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Widget:
+            size_hint_y: None
+            height: dp(10)
+
+        MDLabel:
+            text: "I can show you local ideas based on where you are"
+            font_size: sp(14)
+            theme_text_color: "Custom"
+            text_color: app.muted_text_color
+            halign: "left"
+            size_hint_y: None
+            height: self.texture_size[1]
+            text_size: self.width, None
+            line_height: 1.35
+
+        Widget:
+            size_hint_y: None
+            height: dp(28)
+
+        LocationOptionButton:
+            choice_text: "Use my location"
+            icon_name: "crosshairs-gps"
+            on_release: root.get_my_location()
+
+        Widget:
+            size_hint_y: None
+            height: dp(10)
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(8)
+
+            MDBoxLayout:
+                size_hint_y: None
+                height: dp(52)
+                padding: [dp(16), 0, dp(16), 0]
+                canvas.before:
+                    Color:
+                        rgba: app.surface_color
+                    RoundedRectangle:
+                        pos: self.pos
+                        size: self.size
+                        radius: [dp(16)]
+                MDIcon:
+                    icon: "magnify"
+                    theme_text_color: "Custom"
+                    text_color: app.muted_text_color
+                    font_size: dp(18)
+                    size_hint: None, None
+                    size: dp(22), dp(22)
+                    pos_hint: {"center_y": 0.5}
+                TextInput:
+                    id: city_input
+                    text: root.display_text
+                    hint_text: "Enter city manually..."
+                    hint_text_color: app.muted_text_color
+                    multiline: False
+                    font_size: sp(15)
+                    cursor_color: app.primary_text_color
+                    foreground_color: app.primary_text_color
+                    background_color: 0, 0, 0, 0
+                    padding: [dp(10), (self.height - self.line_height) / 2, 0, 0]
+                    on_text: root.search_text = self.text
+
+            MDCard:
+                id: city_results
+                orientation: "vertical"
+                size_hint_y: None
+                height: dp(180) if root.filtered_cities else 0
+                md_bg_color: app.surface_color
+                radius: [dp(16)]
+                elevation: 0
+                opacity: 1 if self.height > 0 else 0
+                clip_to_bounds: True
+                padding: [0, dp(12), 0, dp(12)]
+                ScrollView:
+                    bar_width: dp(2)
+                    MDBoxLayout:
+                        id: cities_list
+                        orientation: "vertical"
+                        adaptive_height: True
+                        spacing: 0
+
+        Widget:
+            size_hint_y: 1
+
+        Button:
+            size_hint: 1, None
+            height: dp(54)
+            background_color: 0, 0, 0, 0
+            on_release: root.next_step()
+            canvas.before:
+                Color:
+                    rgba: (0.102, 0.451, 0.914, 1) if root.is_city_valid else app.disabled_surface_color
+                RoundedRectangle:
+                    size: self.size
+                    pos: self.pos
+                    radius: [dp(20)]
+            MDRelativeLayout:
+                pos: self.parent.pos if self.parent else (0, 0)
+                size: self.parent.size if self.parent else (0, 0)
+                MDLabel:
+                    text: "Continue"
+                    halign: "center"
+                    bold: True
+                    font_size: sp(16)
+                    theme_text_color: "Custom"
+                    text_color: app.inverse_text_color if root.is_city_valid else app.muted_text_color
+                    pos_hint: {"center_x": .5, "center_y": .5}
+
+        Widget:
+            size_hint_y: None
+            height: dp(56)

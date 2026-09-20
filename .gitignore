@@ -1,0 +1,26 @@
+# Python / Kivy local artifacts
+__pycache__/
+*.py[cod]
+*.pyo
+.pytest_cache/
+
+# Virtual environments
+venv/
+.venv/
+env/
+
+# Buildozer / Android build output
+.buildozer/
+bin/
+*.apk
+*.aab
+
+# IDE and local settings
+.idea/
+.vscode/
+.dev_session.json
+.theme_settings.json
+
+# OS files
+.DS_Store
+Thumbs.db

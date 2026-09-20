@@ -1,0 +1,355 @@
+<DayTile>:
+    size_hint: None, None
+    size: dp(42), dp(58)
+    MDFloatLayout:
+        size: root.size
+        pos: root.pos
+        MDLabel:
+            text: root.day_name
+            size_hint: None, None
+            size: root.width, dp(18)
+            pos_hint: {"center_x": 0.5, "top": 1}
+            font_size: sp(8)
+            theme_text_color: "Custom"
+            text_color: app.muted_text_color if root.in_current_month else (app.muted_text_color[0], app.muted_text_color[1], app.muted_text_color[2], 0.42)
+            halign: "center"
+            valign: "middle"
+            text_size: self.size
+        MDFloatLayout:
+            size_hint: None, None
+            size: dp(32), dp(32)
+            pos_hint: {"center_x": 0.5, "y": 0.02}
+            canvas.before:
+                Color:
+                    rgba: (0.102, 0.451, 0.910, 1) if root.is_selected else (0, 0, 0, 0)
+                Ellipse:
+                    pos: self.pos
+                    size: self.size
+                Color:
+                    rgba: (0.102, 0.451, 0.910, 1) if root.is_today and not root.is_selected else (0, 0, 0, 0)
+                Line:
+                    width: 1
+                    ellipse: self.x, self.y, self.width, self.height
+            MDLabel:
+                text: root.day_num
+                size: root.width, root.height
+                pos: root.pos
+                font_size: sp(17)
+                bold: True
+                theme_text_color: "Custom"
+                text_color: app.inverse_text_color if root.is_selected else ((0.33, 0.62, 1, 1) if root.is_today else (app.primary_text_color if root.in_current_month else (app.muted_text_color[0], app.muted_text_color[1], app.muted_text_color[2], 0.45)))
+                halign: "center"
+                valign: "middle"
+                text_size: self.size
+
+<CalendarScreen>:
+    md_bg_color: app.app_bar_bg_color
+    MDBoxLayout:
+        orientation: "vertical"
+        padding: [dp(20), dp(18), dp(20), dp(20)]
+        spacing: dp(12)
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(38)
+            MDFloatLayout:
+                size_hint_x: 1
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(38), dp(38)
+                    pos_hint: {"x": 0, "center_y": 0.5}
+                    canvas.before:
+                        Color:
+                            rgba: app.surface_color
+                        Ellipse:
+                            pos: self.pos
+                            size: self.size
+                    Button:
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        size_hint: None, None
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        on_release: app.switch_screen("chat", "right")
+                    MDIcon:
+                        icon: "chevron-left"
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        font_size: dp(20)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+                MDBoxLayout:
+                    orientation: "horizontal"
+                    size_hint: None, None
+                    size: dp(214), dp(38)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    MDIconButton:
+                        icon: "chevron-left"
+                        theme_icon_color: "Custom"
+                        icon_color: 0.72, 0.74, 0.78, 1
+                        icon_size: dp(18)
+                        on_release: root.change_month(-1)
+                    MDLabel:
+                        text: root.ids.month_label.text + " " + root.ids.year_label.text
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        bold: True
+                        font_size: sp(22)
+                        halign: "center"
+                        valign: "middle"
+                        text_size: self.size
+                    MDIconButton:
+                        icon: "chevron-right"
+                        theme_icon_color: "Custom"
+                        icon_color: 0.72, 0.74, 0.78, 1
+                        icon_size: dp(18)
+                        on_release: root.change_month(1)
+
+                MDIcon:
+                    icon: "magnify"
+                    theme_text_color: "Custom"
+                    text_color: app.primary_text_color
+                    font_size: dp(22)
+                    pos_hint: {"right": 1, "center_y": 0.5}
+
+        MDBoxLayout:
+            id: hidden_labels_box
+            opacity: 0
+            height: 0
+            size_hint_y: None
+            MDLabel:
+                id: month_label
+                text: "April"
+            MDLabel:
+                id: year_label
+                text: "2026"
+
+        ScrollView:
+            size_hint: 1, None
+            height: dp(62)
+            do_scroll_y: False
+            do_scroll_x: True
+            bar_width: 0
+            MDBoxLayout:
+                id: days_container
+                orientation: "horizontal"
+                adaptive_width: True
+                spacing: dp(5)
+                padding: [dp(10), 0, dp(10), 0]
+
+        Widget:
+            size_hint_y: None
+            height: dp(2)
+            canvas.before:
+                Color:
+                    rgba: 1, 1, 1, 0.15
+                RoundedRectangle:
+                    pos: self.x + self.width / 2 - dp(18), self.y
+                    size: dp(36), dp(2)
+                    radius: [dp(2)]
+
+        MDBoxLayout:
+            size_hint_y: None
+            height: dp(38)
+            padding: [dp(12), 0, dp(12), 0]
+            spacing: dp(10)
+            canvas.before:
+                Color:
+                    rgba: app.surface_color
+                RoundedRectangle:
+                    pos: self.pos
+                    size: self.size
+                    radius: [dp(13)]
+            MDIcon:
+                icon: "magnify"
+                theme_text_color: "Custom"
+                text_color: app.muted_text_color
+                font_size: dp(20)
+                size_hint: None, None
+                size: dp(20), dp(20)
+                pos_hint: {"center_y": 0.5}
+            TextInput:
+                id: search_input
+                text: root.search_text
+                hint_text: "Search plans..."
+                hint_text_color: app.muted_text_color
+                foreground_color: app.primary_text_color
+                background_color: 0, 0, 0, 0
+                cursor_color: app.primary_text_color
+                multiline: False
+                font_size: sp(14)
+                size_hint_y: None
+                height: dp(24)
+                pos_hint: {"center_y": 0.5}
+                padding: [0, dp(2), 0, 0]
+                on_text: root.search_text = self.text
+            MDIcon:
+                icon: "arrow-right"
+                theme_text_color: "Custom"
+                text_color: app.muted_text_color
+                font_size: dp(20)
+                size_hint: None, None
+                size: dp(20), dp(20)
+                pos_hint: {"center_y": 0.5}
+
+        AnchorLayout:
+            size_hint: 1, None
+            height: dp(38)
+            anchor_x: "center"
+            anchor_y: "center"
+            MDBoxLayout:
+                size_hint_x: None
+                width: self.minimum_width
+                size_hint_y: None
+                height: dp(30)
+                spacing: dp(7)
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(52), dp(30)
+                    canvas.before:
+                        Color:
+                            rgba: app.selected_chip_color if root.selected_tab == "all" else app.surface_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                    Button:
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        on_release: root.select_tab("all")
+                    MDLabel:
+                        text: "All"
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        halign: "center"
+                        valign: "middle"
+                        text_size: self.size
+                        bold: True
+                        font_size: sp(12)
+                        theme_text_color: "Custom"
+                        text_color: app.selected_chip_text_color if root.selected_tab == "all" else app.muted_text_color
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(70), dp(30)
+                    canvas.before:
+                        Color:
+                            rgba: app.selected_chip_color if root.selected_tab == "places" else app.surface_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                    Button:
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        on_release: root.select_tab("places")
+                    MDLabel:
+                        text: "Places"
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        halign: "center"
+                        valign: "middle"
+                        text_size: self.size
+                        bold: True
+                        font_size: sp(12)
+                        theme_text_color: "Custom"
+                        text_color: app.selected_chip_text_color if root.selected_tab == "places" else app.muted_text_color
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(70), dp(30)
+                    canvas.before:
+                        Color:
+                            rgba: app.selected_chip_color if root.selected_tab == "events" else app.surface_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                    Button:
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        on_release: root.select_tab("events")
+                    MDLabel:
+                        text: "Events"
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        halign: "center"
+                        valign: "middle"
+                        text_size: self.size
+                        bold: True
+                        font_size: sp(12)
+                        theme_text_color: "Custom"
+                        text_color: app.selected_chip_text_color if root.selected_tab == "events" else app.muted_text_color
+                MDFloatLayout:
+                    size_hint: None, None
+                    size: dp(82), dp(30)
+                    canvas.before:
+                        Color:
+                            rgba: app.selected_chip_color if root.selected_tab == "home" else app.surface_color
+                        RoundedRectangle:
+                            pos: self.pos
+                            size: self.size
+                            radius: [dp(15)]
+                    Button:
+                        background_color: 0, 0, 0, 0
+                        background_normal: ""
+                        background_down: ""
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        on_release: root.select_tab("home")
+                    MDLabel:
+                        text: "At home"
+                        size: self.parent.size
+                        pos: self.parent.pos
+                        halign: "center"
+                        valign: "middle"
+                        text_size: self.size
+                        bold: True
+                        font_size: sp(12)
+                        theme_text_color: "Custom"
+                        text_color: app.selected_chip_text_color if root.selected_tab == "home" else app.muted_text_color
+
+        Widget:
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(8)
+            MDLabel:
+                text: root.empty_title
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                halign: "center"
+                bold: True
+                font_size: sp(20)
+                size_hint_y: None
+                height: self.texture_size[1] if self.text else 0
+            MDLabel:
+                text: root.empty_subtitle
+                theme_text_color: "Custom"
+                text_color: app.muted_text_color
+                halign: "center"
+                font_size: sp(13)
+                text_size: self.width, None
+                size_hint_y: None
+                height: self.texture_size[1] if self.text else 0
+
+        ScrollView:
+            bar_width: 0
+            MDBoxLayout:
+                id: calendar_items_box
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(12)
+
+        Widget:

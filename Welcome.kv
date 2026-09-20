@@ -1,0 +1,284 @@
+MDScreenManager:
+    size_hint: 1, 1
+    WelcomeScreen:
+        name: "welcome"
+    GenderScreen:
+        name: "gender"
+    AgeScreen:
+        name: "age_screen"
+    BudgetScreen:
+        name: "budget_screen"
+    FocusScreen:
+        name: "focus_screen"
+    HobbiesScreen:
+        name: "hobbies_screen"
+    ActivityScreen:
+        name: "activity_screen"
+    LocationScreen:
+        name: "location_screen"
+    AuthScreen:
+        name: "auth_screen"
+    LoginScreen:
+        name: "login_screen"
+    ChatInterface:
+        name: "chat"
+    ProfileScreen:
+        name: "profile"
+    EditProfileScreen:
+        name: "edit_profile"
+    FriendsScreen:
+        name: "friends_screen"
+    PrivacyScreen:
+        name: "privacy_screen"
+    TripsScreen:
+        name: "trips_screen"
+    SubscriptionScreen:
+        name: "subscription_screen"
+    CalendarScreen:
+        name: "calendar_screen"
+
+<LoginButton@Button>:
+    btn_text: ""
+    icon_name: ""
+    is_google: False
+    has_glow: False
+    bg_color: 0.098, 0.114, 0.125, 1
+    size_hint: None, None
+    width: dp(322)
+    height: dp(52)
+    pos_hint: {"center_x": 0.5}
+    background_color: 0, 0, 0, 0
+    canvas.before:
+        Color:
+            rgba: root.bg_color
+        RoundedRectangle:
+            size: self.size
+            pos: self.pos
+            radius: [self.height / 2]
+        Color:
+            rgba: (0.12, 0.49, 0.95, 0.13) if root.has_glow else (0, 0, 0, 0)
+        BoxShadow:
+            pos: self.pos
+            size: self.size
+            offset: 0, 0
+            blur_radius: dp(56) if root.has_glow else 0
+            spread_radius: [dp(-10), dp(-10)]
+            border_radius: [self.height / 2] * 4
+        Color:
+            rgba: (0.72, 0.82, 0.98, 0.15) if root.has_glow else (0, 0, 0, 0)
+        Line:
+            width: 1
+            rounded_rectangle: self.x, self.y, self.width, self.height, self.height / 2
+
+    RelativeLayout:
+        size: root.size
+        pos: root.pos
+        MDIcon:
+            icon: "google" if root.is_google else root.icon_name
+            theme_text_color: "Custom"
+            text_color: app.sheet_text_color
+            font_size: dp(22)
+            pos_hint: {"center_x": .25, "center_y": .5}
+        MDLabel:
+            text: root.btn_text
+            theme_text_color: "Custom"
+            text_color: app.sheet_text_color
+            font_size: sp(16)
+            halign: "left"
+            pos_hint: {"center_x": .8, "center_y": .5}
+
+<WelcomeScreen>:
+    MDFloatLayout:
+        md_bg_color: app.app_bg_color
+
+        MDCard:
+            size_hint: None, None
+            size: dp(40), dp(40)
+            pos_hint: {"x": 0.06, "top": 0.95}
+            radius: [dp(20)]
+            md_bg_color: app.chip_bg_color
+            elevation: 0
+            MDFloatLayout:
+                Button:
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    size_hint: 1, 1
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                    on_release: app.toggle_color_mode()
+                MDIcon:
+                    icon: app.theme_toggle_icon
+                    theme_text_color: "Custom"
+                    text_color: app.sheet_text_color
+                    font_size: dp(18)
+                    size_hint: None, None
+                    size: dp(40), dp(40)
+                    halign: "center"
+                    valign: "middle"
+                    text_size: self.size
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        MDCard:
+            size_hint: None, None
+            size: dp(82), dp(40)
+            pos_hint: {"right": 0.94, "top": 0.95}
+            radius: [dp(20)]
+            md_bg_color: app.chip_bg_color
+            elevation: 0
+            AnchorLayout:
+                anchor_x: "center"
+                anchor_y: "center"
+                MDBoxLayout:
+                    adaptive_size: True
+                    spacing: dp(5)
+                    Image:
+                        source: "assets/flags/eng.png"
+                        size_hint: None, None
+                        size: dp(24), dp(24)
+                    MDLabel:
+                        text: "EN"
+                        theme_text_color: "Custom"
+                        text_color: app.sheet_text_color
+                        font_size: sp(14)
+                        bold: True
+                        adaptive_width: True
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint: 1, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "top": 0.845}
+            padding: [dp(24), 0, dp(24), 0]
+            spacing: dp(14)
+            MDLabel:
+                text: "Your personal AI\nassistant for leisure"
+                halign: "center"
+                font_size: sp(34)
+                bold: True
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                line_height: 1.15
+                adaptive_height: True
+            MDLabel:
+                text: "Discover ideas that match your mood, time\nand interests - all in one place."
+                halign: "center"
+                font_size: sp(16)
+                theme_text_color: "Custom"
+                text_color: app.secondary_text_color
+                line_height: 1.5
+                adaptive_height: True
+
+        AnchorLayout:
+            anchor_x: "center"
+            anchor_y: "center"
+            size_hint: 1, None
+            height: root.height * 0.35
+            pos_hint: {"center_x": 0.5, "center_y": 0.385}
+            Image:
+                source: "assets/Welcome/Welcome.png"
+                size_hint: None, None
+                size: dp(184), dp(260)
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint: 1, None
+            height: self.minimum_height
+            pos_hint: {"center_x": 0.5, "y": 0.06}
+            padding: [dp(24), 0, dp(24), 0]
+            spacing: dp(12)
+            Button:
+                text: "Begin"
+                font_size: sp(18)
+                bold: True
+                size_hint: 1, None
+                height: dp(56)
+                background_color: 0, 0, 0, 0
+                on_release: app.switch_screen("gender", 'left')
+                canvas.before:
+                    Color:
+                        rgba: (0.102, 0.451, 0.914, 1)
+                    RoundedRectangle:
+                        size: self.size
+                        pos: self.pos
+                        radius: [dp(20)]
+            MDFlatButton:
+                text: "Sign in"
+                theme_text_color: "Custom"
+                text_color: app.secondary_text_color
+                font_size: sp(16)
+                pos_hint: {"center_x": 0.5}
+                on_release: root.open_menu()
+
+        MDFloatLayout:
+            id: shade
+            opacity: root.opacity_bg
+            md_bg_color: app.modal_scrim_color
+            on_touch_down: if self.opacity > 0: root.close_menu()
+
+        MDCard:
+            id: login_card
+            size_hint: 1, None
+            height: dp(348)
+            pos_hint: {"center_x": 0.5}
+            y: root.login_card_pos
+            radius: [dp(32), dp(32), 0, 0]
+            md_bg_color: app.sheet_bg_color
+            orientation: "vertical"
+            padding: [dp(24), dp(2), dp(24), dp(6)]
+            spacing: dp(6)
+
+            MDFloatLayout:
+                size_hint_y: None
+                height: dp(42)
+                MDLabel:
+                    text: "Sign in"
+                    halign: "center"
+                    bold: True
+                    font_size: dp(20)
+                    theme_text_color: "Custom"
+                    text_color: app.sheet_text_color
+                    pos_hint: {"center_x": 0.5, "center_y": 0.58}
+                MDIconButton:
+                    icon: "close"
+                    theme_text_color: "Custom"
+                    text_color: app.sheet_muted_text_color
+                    pos_hint: {"right": 1.0, "center_y": 0.58}
+                    on_release: root.close_menu()
+
+            MDBoxLayout:
+                orientation: "vertical"
+                size_hint_y: None
+                height: self.minimum_height
+                spacing: dp(16)
+                padding: [0, 0, 0, 0]
+                LoginButton:
+                    btn_text: "Continue with Google"
+                    is_google: True
+                    bg_color: app.sheet_button_bg_color
+                    on_release: root.start_google_login()
+                LoginButton:
+                    btn_text: "Continue with Apple"
+                    icon_name: "apple"
+                    bg_color: app.sheet_button_bg_color
+                    on_release: root.start_apple_login()
+                LoginButton:
+                    btn_text: "Continue with Email"
+                    icon_name: "email-outline"
+                    bg_color: app.sheet_accent_button_bg_color
+                    has_glow: True
+                    on_release: root.open_email_login()
+
+            Widget:
+                size_hint_y: None
+                height: dp(-8)
+
+            MDLabel:
+                text: "By continuing, you agree to XolidayAI's [color=#AAAAAA][u]Terms and Conditions[/u][/color] and [color=#AAAAAA][u]Privacy Policy[/u][/color]"
+                markup: True
+                font_size: sp(11)
+                theme_text_color: "Custom"
+                text_color: app.sheet_muted_text_color
+                size_hint_y: None
+                height: dp(78)
+                halign: "center"
+                line_height: 1.1

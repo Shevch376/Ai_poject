@@ -1,0 +1,230 @@
+<ProfileRow@Button>:
+    row_icon: ""
+    row_text: ""
+    background_color: 0, 0, 0, 0
+    background_normal: ""
+    background_down: ""
+    size_hint_y: None
+    height: dp(58)
+    canvas.before:
+        Color:
+            rgba: app.surface_color
+        RoundedRectangle:
+            pos: self.pos
+            size: self.size
+            radius: [dp(18)]
+    MDBoxLayout:
+        orientation: "horizontal"
+        pos: root.pos
+        size: root.size
+        padding: [dp(16), 0, dp(16), 0]
+        spacing: dp(14)
+        MDIcon:
+            icon: root.row_icon
+            theme_text_color: "Custom"
+            text_color: app.primary_text_color
+            font_size: dp(20)
+            size_hint: None, None
+            size: dp(22), dp(22)
+            pos_hint: {"center_y": 0.5}
+        MDLabel:
+            text: root.row_text
+            theme_text_color: "Custom"
+            text_color: app.primary_text_color
+            font_size: sp(16)
+            bold: True
+            halign: "left"
+            pos_hint: {"center_y": 0.5}
+        MDIcon:
+            icon: "chevron-right"
+            theme_text_color: "Custom"
+            text_color: 0.72, 0.74, 0.78, 1
+            font_size: dp(18)
+            size_hint: None, None
+            size: dp(18), dp(18)
+            pos_hint: {"center_y": 0.5}
+
+<ProfileScreen>:
+    MDBoxLayout:
+        orientation: "vertical"
+        md_bg_color: app.app_bg_color
+        padding: [dp(14), dp(18), dp(14), dp(24)]
+
+        MDFloatLayout:
+            size_hint_y: None
+            height: dp(42)
+            MDFloatLayout:
+                size_hint: None, None
+                size: dp(40), dp(40)
+                pos_hint: {"x": 0, "center_y": 0.5}
+                canvas.before:
+                    Color:
+                        rgba: app.surface_color
+                    Ellipse:
+                        pos: self.pos
+                        size: self.size
+                Button:
+                    size: root.size
+                    pos: root.pos
+                    size_hint: None, None
+                    background_color: 0, 0, 0, 0
+                    background_normal: ""
+                    background_down: ""
+                    on_release: root.go_back()
+                MDIcon:
+                    icon: "chevron-left"
+                    theme_text_color: "Custom"
+                    text_color: app.primary_text_color
+                    font_size: dp(21)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.5}
+            MDLabel:
+                text: "Profile"
+                halign: "center"
+                font_size: sp(21)
+                bold: True
+                theme_text_color: "Custom"
+                text_color: app.primary_text_color
+                pos_hint: {"center_x": 0.5, "center_y": 0.5}
+
+        Widget:
+            size_hint_y: None
+            height: dp(26)
+
+        MDCard:
+            size_hint_y: None
+            height: dp(194)
+            radius: [dp(24)]
+            md_bg_color: app.surface_strong_color
+            elevation: 0
+            padding: [dp(18), dp(16), dp(18), dp(16)]
+            MDFloatLayout:
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: dp(92), dp(44)
+                    pos_hint: {"x": 0.04, "top": 0.79}
+                    MDLabel:
+                        text: str(root.profile_personalization) + "%"
+                        halign: "center"
+                        font_size: sp(16)
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                    MDLabel:
+                        text: "Personalization"
+                        halign: "center"
+                        font_size: sp(12)
+                        theme_text_color: "Custom"
+                        text_color: app.muted_text_color
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint: None, None
+                    size: dp(88), dp(44)
+                    pos_hint: {"right": 0.96, "top": 0.79}
+                    MDIcon:
+                        icon: "check-circle"
+                        theme_text_color: "Custom"
+                        text_color: 0.204, 0.780, 0.349, 1
+                        font_size: dp(20)
+                        pos_hint: {"center_x": 0.5}
+                    MDLabel:
+                        text: "Premium"
+                        halign: "center"
+                        font_size: sp(12)
+                        theme_text_color: "Custom"
+                        text_color: app.muted_text_color
+
+                MDRelativeLayout:
+                    size_hint: None, None
+                    size: dp(82), dp(82)
+                    pos_hint: {"center_x": 0.5, "center_y": 0.62}
+                    canvas.before:
+                        Color:
+                            rgba: 0.102, 0.451, 0.914, 1
+                        Line:
+                            width: 2
+                            circle: (self.center_x, self.center_y, dp(41), 0, 360)
+                    FitImage:
+                        source: ""
+                        size_hint: None, None
+                        size: dp(72), dp(72)
+                        pos_hint: {"center_x": 0.5, "center_y": 0.5}
+                        radius: [dp(36)]
+                        md_bg_color: app.surface_color
+
+                MDBoxLayout:
+                    orientation: "vertical"
+                    size_hint: 1, None
+                    height: dp(58)
+                    pos_hint: {"center_x": 0.5, "y": 0.05}
+                    padding: [dp(36), 0, dp(36), 0]
+                    MDLabel:
+                        text: root.profile_name
+                        halign: "center"
+                        font_size: sp(16)
+                        bold: True
+                        theme_text_color: "Custom"
+                        text_color: app.primary_text_color
+                        text_size: self.width, None
+                    Widget:
+                        size_hint_y: None
+                        height: dp(4)
+                    MDLabel:
+                        text: root.profile_location
+                        halign: "center"
+                        font_size: sp(14)
+                        theme_text_color: "Custom"
+                        text_color: 0.102, 0.451, 0.914, 1
+                        text_size: self.width, None
+
+        Widget:
+            size_hint_y: None
+            height: dp(32)
+
+        MDLabel:
+            text: "Profile & Settings"
+            font_size: sp(16)
+            bold: True
+            theme_text_color: "Custom"
+            text_color: app.primary_text_color
+            size_hint_y: None
+            height: self.texture_size[1]
+
+        Widget:
+            size_hint_y: None
+            height: dp(14)
+
+        MDBoxLayout:
+            orientation: "vertical"
+            size_hint_y: None
+            height: self.minimum_height
+            spacing: dp(12)
+
+            ProfileRow:
+                row_icon: "account-outline"
+                row_text: "User Profile"
+                on_release: app.switch_screen("edit_profile", "left")
+
+            ProfileRow:
+                row_icon: "account-group-outline"
+                row_text: "Friends"
+                on_release: app.switch_screen("friends_screen", "left")
+
+            ProfileRow:
+                row_icon: "credit-card-outline"
+                row_text: "Subscription / Payment"
+                on_release: app.switch_screen("subscription_screen", "left")
+
+            ProfileRow:
+                row_icon: "shield-lock-outline"
+                row_text: "Privacy & Permissions"
+                on_release: app.switch_screen("privacy_screen", "left")
+
+            ProfileRow:
+                row_icon: "headphones"
+                row_text: "Support & Feedback"
+                on_release: app.switch_screen("trips_screen", "left")
+
+        Widget:
+            size_hint_y: 1
